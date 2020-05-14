@@ -43,24 +43,24 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 break;
         }
         ArrayList<String> brokerList = new ArrayList<String>();
-        JSONArray jsonBrokerList = (JSONArray)args.get(3);
-        if (jsonBrokerList != null) { 
-            int len = jsonBrokerList.length();
-            for (int i=0;i<len;i++){ 
-             brokerList.add(jsonBrokerList.get(i).toString());
-            } 
-         } 
-         showToast(args.toString());
+        try{
+            JSONArray jsonBrokerList = (JSONArray)args.get(3);
+            if (jsonBrokerList != null) { 
+                int len = jsonBrokerList.length();
+                for (int i=0;i<len;i++){ 
+                 brokerList.add(jsonBrokerList.get(i).toString());
+                } 
+             } 
+        }catch(JSONException e){}
+       
         SmallcaseGatewaySdk.INSTANCE.setConfigEnvironment(new Environment(buildType,args.getString(1),(Boolean)args.get(2),brokerList),new SmallcaseGatewayListeners(){
             @Override
             public void onGatewaySetupSuccessfull() {
-                showToast("init success");
             callbackContext.success("init success");
             }
 
             @Override
             public void onGatewaySetupFailed(String error) {
-                showToast("init failed");
                 callbackContext.error(error);
             }
         });
@@ -69,7 +69,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
         SmallcaseGatewaySdk.INSTANCE.init(new InitRequest(args.getString(0)),new DataListener<InitialisationResponse>() {
             @Override
             public void onSuccess(InitialisationResponse response) {
-                   Gson gso = new Gson(); 
+                Gson gso = new Gson(); 
                 callbackContext.success(gso.toJson(response));
                 
             }
@@ -91,7 +91,6 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
         return true;
     }else if(action.equals("triggerTransaction"))
     {
-        showToast(args.getString(0));
         SmallcaseGatewaySdk.INSTANCE.triggerTransaction(this.cordova.getActivity(),args.getString(0),new TransactionResponseListener() {
             @Override
             public void onSuccess(TransactionResult transactionResult) {
@@ -114,37 +113,16 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
         }); 
         return true;
     }
-if("init".equals(action)) {
-    Context context = this.cordova.getActivity().getApplicationContext();
-    int duration = Toast.LENGTH_LONG;
-
-    Toast toast = Toast.makeText(context, "Hello World!", duration);
-    toast.show();
-/**if(configJson == null) {
-configJson = new JSONObject();
-}
-
-Instabug.initialize(mCordova.getActivity().getApplication(), configJson.getString(“androidToken”));
-Instabug.getInstance().setActivity(mCordova.getActivity());
-callbackContext.success();
-} else if(“invoke”.equals(action)) {
-Instabug.getInstance().invoke();
-} else if(“invokeFeedbackSender”.equals(action)) {
-Instabug.getInstance().invokeFeedbackSender();
-} else if(“invokeBugReporter”.equals(action)) {
-Instabug.getInstance().invokeBugReporter();*/
-return true;
-}
 
 return false;
 }
 
-private void showToast(String msg)
+/**private void showToast(String msg)
 {
     Context context = this.cordova.getActivity().getApplicationContext();
     int duration = Toast.LENGTH_SHORT;
 
     Toast toast = Toast.makeText(context, msg, duration);
     toast.show();
-}
+}*/
 }

@@ -1,15 +1,5 @@
 var exec = require('cordova/exec');
 
-exports.callInit = function()
-{
-    console.log('Called init');
-    cordova.exec(function(winParam) {},
-    function(error) {},
-    "SCGatewayPhonegap",
-    "init",
-    []);
-};
-
 exports.setConfigEnvironment = function(successCallback,failureCallback,args)
 {
     cordova.exec(
