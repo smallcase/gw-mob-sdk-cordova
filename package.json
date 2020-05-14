@@ -1,0 +1,27 @@
+{
+  "name": "com.scgateway.phonegap",
+  "version": "0.0.1",
+  "description": "Scgateway wrapper Cordova Plugin",
+  "cordova": {
+    "id": "com.scgateway.phonegap",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "scgateway",
+    "gateway",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.7.0"
+    }
+  ],
+  "author": "",
+  "license": "ISC"
+}

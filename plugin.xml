@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ id="com.scgateway.phonegap" version="0.0.1">
+ <name>Scgateway SDK</name>
+ <description>Scgateway wrapper Cordova Plugin</description>
+ <keywords>scgateway,gateway</keywords>
+ <engines>
+ <!-- Requires > 3.3.* because of the custom Framework tag for iOS [CB-5238] -->
+ <!-- Requires > 3.5.0 because of the custom Framework tag for Android [CB-6698] -->
+ <engine name="cordova" version=">=3.7.0" />
+ </engines>
+ <js-module src="SCGatewayPhonegap.js" name="scgateway">
+        <clobbers target="scgateway" />
+    </js-module>
+ <platform name="android">
+ <config-file target="res/xml/config.xml" parent="/*">
+ <feature name="SCGatewayPhonegap">
+ <param name="android-package" value="com.scgateway.phonegap.SCGatewayPhonegap"/>
+ </feature>
+ </config-file>
+ <source-file src="SCGatewayPhonegap.java" target-dir="src/com/scgateway/phonegap/android" />
+ <framework src="build.gradle" custom="true" type="gradleReference"/>
+<config-file target="AndroidManifest.xml" parent="/manifest">
+ <uses-permission android:name="android.permission.INTERNET" />
+ </config-file>
+</platform>
+ <platform name="ios">
+ <config-file target="config.xml" parent="/*">
+ <feature name="SCGatewayPhonegap">
+ <param name="ios-package" value="SCGatewayPhonegap"/>
+ </feature>
+</config-file>
+ <framework src="SCGateway.framework" custom="true" />
+ <header-file src="SCGatewayPhonegap.h" />
+ <source-file src="SCGatewayPhonegap.m" />
+ </platform>
+</plugin>
