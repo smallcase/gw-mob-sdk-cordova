@@ -56,12 +56,27 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
         SmallcaseGatewaySdk.INSTANCE.setConfigEnvironment(new Environment(buildType,args.getString(1),(Boolean)args.get(2),brokerList),new SmallcaseGatewayListeners(){
             @Override
             public void onGatewaySetupSuccessfull() {
-            callbackContext.success("init success");
+                JSONObject jo = new JSONObject();
+                try{
+                    jo.put("success",true);
+                    callbackContext.success(jo);
+                }catch(JSONException e){
+                    callbackContext.success();
+                }
+            
             }
 
             @Override
             public void onGatewaySetupFailed(String error) {
-                callbackContext.error(error);
+                JSONObject jo = new JSONObject();
+                try{
+                    jo.put("success",false);
+                    jo.put("error",error);
+                    callbackContext.error(jo);
+                }catch(JSONException e){
+                    callbackContext.error("JSONException");
+                }
+                
             }
         });
         return true;
@@ -69,8 +84,27 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
         SmallcaseGatewaySdk.INSTANCE.init(new InitRequest(args.getString(0)),new DataListener<InitialisationResponse>() {
             @Override
             public void onSuccess(InitialisationResponse response) {
-                Gson gso = new Gson(); 
-                callbackContext.success(gso.toJson(response));
+                
+                    JSONObject jo = new JSONObject();
+                    if(response.getGatewayToken()!=null)
+                    {
+                        try{
+                        jo.put("gatewayToken", response.getGatewayToken());
+                        } catch(JSONException e)
+                        {
+                            callbackContext.error("JSONException");
+                        }
+                    }
+                    if(response.getCsrf()!=null)
+                    {
+                        try{
+                            jo.put("csrf", response.getCsrf());
+                            } catch(JSONException e)
+                            {
+                                callbackContext.error("JSONException");
+                            }
+                    }
+                callbackContext.success(jo);
                 
             }
  
@@ -80,10 +114,10 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                     JSONObject jo = new JSONObject();
                     jo.put("errorCode", errorCode);
                     jo.put("errorMessage", errorMessage);
-                    callbackContext.error(jo.toString());
+                    callbackContext.error(jo);
                 } catch(JSONException e)
                 {
-                    callbackContext.error(e.getMessage());
+                    callbackContext.error("JSONException");
                 }
               
             }
@@ -93,9 +127,8 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
     {
         SmallcaseGatewaySdk.INSTANCE.triggerTransaction(this.cordova.getActivity(),args.getString(0),new TransactionResponseListener() {
             @Override
-            public void onSuccess(TransactionResult transactionResult) {
-                Gson gso = new Gson(); 
-                callbackContext.success(gso.toJson(transactionResult));
+            public void onSuccess(TransactionResult transactionResult) { 
+                callbackContext.success(convertToJson(transactionResult));
             }
  
             @Override
@@ -104,10 +137,10 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                     JSONObject jo = new JSONObject();
                     jo.put("errorCode", errorCode);
                     jo.put("errorMessage", errorMessage);
-                    callbackContext.error(jo.toString());
+                    callbackContext.error(jo);
                 } catch(JSONException e)
                 {
-                    callbackContext.error(e.getMessage());
+                    callbackContext.error("JSONException");
                 }
             }
         }); 
@@ -115,6 +148,46 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
     }
 
 return false;
+}
+
+private JSONObject convertToJson(TransactionResult transactionResult)
+{
+    JSONObject jsonObj = new JSONObject();
+    if(transactionResult.getData()!=null)
+    {
+        try {
+            JSONObject jsonObject = new JSONObject(transactionResult.getData());
+            jsonObj.put("data",jsonObject);
+         }catch (JSONException err){}
+    }
+    if(transactionResult.getTransaction()!=null)
+    {
+        try {
+            jsonObj.put("transaction",transactionResult.getTransaction().toString()); 
+         }catch (JSONException err){}
+      
+    }
+    try {
+        jsonObj.put("success",transactionResult.getSuccess()); 
+     }catch (JSONException err){}
+    
+
+    if(transactionResult.getErrorCode()!=null)
+    {
+        try {
+            jsonObj.put("errorCode",transactionResult.getErrorCode());
+         }catch (JSONException err){}
+        
+    }
+    if(transactionResult.getError()!=null)
+    {
+        try {
+            jsonObj.put("error",transactionResult.getError());
+         }catch (JSONException err){}
+       
+    }
+
+    return jsonObj;
 }
 
 /**private void showToast(String msg)
