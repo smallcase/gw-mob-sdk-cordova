@@ -1,5 +1,6 @@
 var exec = require('cordova/exec');
 
+
 exports.setConfigEnvironment = function(successCallback,failureCallback,args)
 {
     cordova.exec(
@@ -40,6 +41,8 @@ exports.TRANSACTION_INTENT = {
     TRANSACTION: 'TRANSACTION',
     HOLDINGS_IMPORT: 'HOLDINGS_IMPORT'
 };
+
+
 /*var SCGatewayPhonegap = {
 
     init: function() {

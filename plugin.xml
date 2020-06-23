@@ -31,7 +31,14 @@
  <param name="ios-package" value="SCGatewayPhonegap"/>
  </feature>
 </config-file>
- <framework src="SCGateway.framework" custom="true" />
+<podspec>
+      <config>
+        <source url="https://gitlab.com/smallcase/mobile/gateway/cocoapodspecs.git" />
+      </config>
+      <pods use-frameworks="true" >
+        <pod name="SCGateway" spec="~> 0.0.2" />
+      </pods>
+</podspec>
  <header-file src="SCGatewayPhonegap.h" />
  <source-file src="SCGatewayPhonegap.m" />
  </platform>

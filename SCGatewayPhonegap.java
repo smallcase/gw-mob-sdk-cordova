@@ -86,24 +86,15 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             public void onSuccess(InitialisationResponse response) {
                 
                     JSONObject jo = new JSONObject();
-                    if(response.getGatewayToken()!=null)
-                    {
+                   
                         try{
-                        jo.put("gatewayToken", response.getGatewayToken());
+                        jo.put("success", true);
                         } catch(JSONException e)
                         {
-                            callbackContext.error("JSONException");
+                            
                         }
-                    }
-                    if(response.getCsrf()!=null)
-                    {
-                        try{
-                            jo.put("csrf", response.getCsrf());
-                            } catch(JSONException e)
-                            {
-                                callbackContext.error("JSONException");
-                            }
-                    }
+                    
+                    
                 callbackContext.success(jo);
                 
             }
@@ -112,6 +103,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             public void onFailure(int errorCode, String errorMessage) {
                 try{
                     JSONObject jo = new JSONObject();
+                    jo.put("success",false);
                     jo.put("errorCode", errorCode);
                     jo.put("errorMessage", errorMessage);
                     callbackContext.error(jo);
@@ -158,7 +150,14 @@ private JSONObject convertToJson(TransactionResult transactionResult)
         try {
             JSONObject jsonObject = new JSONObject(transactionResult.getData());
             jsonObj.put("data",jsonObject);
-         }catch (JSONException err){}
+         }catch (JSONException err){
+            try {
+                jsonObj.put("data",transactionResult.getData());
+             }catch (JSONException err1){
+                
+             }
+             
+         }
     }
     if(transactionResult.getTransaction()!=null)
     {
