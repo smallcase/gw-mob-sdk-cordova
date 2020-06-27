@@ -3,7 +3,8 @@
 #import "SCGatewayPhonegap.h"
 #import <SCGateway/SCGateway.h>
 #import <Cordova/CDV.h>
-#import <SCGateway-Swift.h>
+#import <SCGateway/SCGateway-Swift.h>
+
 
 @implementation SCGatewayPhonegap
 
@@ -94,7 +95,7 @@
      [SCGateway.shared initializeGatewayWithSdkToken:authToken completion:^( BOOL success, NSError * error) {
                      if(success){
                          NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
-                        [responseDict setValue:[NSNumber numberWithBool:false] forKey:@"success"];
+                        [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
                         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
                         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                      } else {
