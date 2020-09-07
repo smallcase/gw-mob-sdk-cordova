@@ -5,11 +5,13 @@ import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.*;
 
 /*For toast and context*/
 import java.util.ArrayList;
 import android.content.Context;
-import android.widget.Toast;
+import android.
+widget.Toast;
 import com.smallcase.gateway.data.models.Environment;
 import com.smallcase.gateway.data.SmallcaseGatewayListeners;
 import com.smallcase.gateway.data.requests.InitRequest;
@@ -137,6 +139,22 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             }
         }); 
         return true;
+    }else if(action.equals("triggerLeadGen")){
+        HashMap<String,String> map = new HashMap<String,String>();
+        if(args.get(0) instanceof JSONObject)
+            {
+                JSONObject obj = (JSONObject)args.get(0);
+                Iterator<String> keys = obj.keys();
+                while( keys.hasNext() ){
+                String key = (String)keys.next(); // First key in your json object
+                String value = (String)obj.getString(key);
+
+                map.put(key,value);
+            }
+        }
+        SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(),map);
+
+        return true;
     }
 
 return false;
@@ -189,12 +207,12 @@ private JSONObject convertToJson(TransactionResult transactionResult)
     return jsonObj;
 }
 
-/**private void showToast(String msg)
+private void showToast(String msg)
 {
     Context context = this.cordova.getActivity().getApplicationContext();
     int duration = Toast.LENGTH_SHORT;
 
     Toast toast = Toast.makeText(context, msg, duration);
     toast.show();
-}*/
+}
 }

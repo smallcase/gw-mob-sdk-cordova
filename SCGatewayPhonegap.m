@@ -40,12 +40,15 @@
             NSData *decodedStringData = [[NSData alloc] initWithBase64EncodedString:trxResponse.transaction options: 0];
             NSString *decodedResponse = [[NSString alloc] initWithData:decodedStringData encoding:1];
             NSMutableDictionary *dict=[NSJSONSerialization JSONObjectWithData:[decodedResponse dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-            //[dict setValue:tranxId  forKey:@"transactionId"];
-            NSMutableDictionary *responseData = [NSDictionary dictionaryWithObjectsAndKeys:dict , @"data", trxResponse.authToken , @"smallcaseAuthToken", nil];
-            NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
-            [responseDict setValue:responseData  forKey:@"data"];
-            [responseDict setValue:@"TRANSACTION"  forKey:@"transaction"];
+            
+            NSMutableDictionary *responseDict =  [[NSMutableDictionary alloc] init]; 
+            [responseDict setObject:dict forKey:@"data"];
             [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+            [responseDict setObject:@"TRANSACTION"  forKey:@"transaction"];
+            //[dict setValue:tranxId  forKey:@"transactionId"];
+            // NSMutableDictionary *responseData = [NSDictionary dictionaryWithObjectsAndKeys:dict , @"data", nil];
+            // [responseData setValue:@"TRANSACTION"  forKey:@"transaction"];
+            // [responseData setValue:[NSNumber numberWithBool:true] forKey:@"success"];
             NSLog(@"Decoded response %@", decodedResponse);
             double delayInSeconds = 0.5;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -73,6 +76,7 @@
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
             [dict setValue: trxResponse.authToken  forKey:@"smallcaseAuthToken"];
             [dict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+            [dict setValue: trxResponse.transactionId forKey:@"transactionId"];
             //[dict setValue:tranxId forKey:@"transactionId"];
             NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
             [responseDict setValue:@"HOLDING_IMPORT"  forKey:@"transaction"];
@@ -117,6 +121,7 @@
 
 - (void)setConfigEnvironment:(CDVInvokedUrlCommand*)command{
 NSLog(@"init Called Ios");
+ __block CDVPluginResult *pluginResult = nil;
 NSString  *environmentStr = [command.arguments objectAtIndex:0];
 NSString *gatewayName = [command.arguments objectAtIndex:1];
 BOOL isLeprechaun = [[command.arguments objectAtIndex:2] boolValue];
@@ -140,13 +145,30 @@ else if([environmentStr isEqualToString:@"development"]) {
         environment = EnvironmentStaging;
        }
 GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName brokerConfig:brokerConfig  apiEnvironment:environment isLeprechaunActive: isLeprechaun ? true : false];
-[SCGateway.shared setupWithConfig:config ];
-            double delayInSeconds = 1;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
-            });
+[SCGateway.shared setupWithConfig:config completion:^(BOOL success,NSError * error){
+    if(success)
+    {
+       CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+       [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
+    } else {
+        NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+                        [responseDict setValue:[NSNumber numberWithBool:false] forKey:@"success"];
+                        if(error != nil)
+                        {
+                            [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
+                        [responseDict setValue:error.domain  forKey:@"error"];
+                        }
+                        
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:responseDict];
+                        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}];
 
 }
+
+- (void)triggerLeadGen:(CDVInvokedUrlCommand*)command{
+    NSDictionary *dict = [command.arguments objectAtIndex:0];
+    [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict];
+}
+
 @end

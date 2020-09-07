@@ -30,6 +30,17 @@ exports.triggerTransaction = function(successCallback,failureCallback,args)
         args);
 };
 
+exports.triggerLeadGen = function(args)
+{
+    cordova.exec(
+        function(winParam){},
+        function(error){},
+        "SCGatewayPhonegap",
+        "triggerLeadGen",
+        args);
+};
+
+
 exports.ENVIRONMENT = {
     PRODUCTION: 'production',
     DEVELOPMENT: 'development',
