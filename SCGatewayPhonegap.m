@@ -125,12 +125,13 @@ NSLog(@"init Called Ios");
 NSString  *environmentStr = [command.arguments objectAtIndex:0];
 NSString *gatewayName = [command.arguments objectAtIndex:1];
 BOOL isLeprechaun = [[command.arguments objectAtIndex:2] boolValue];
+BOOL isAmoEnabled = [[command.arguments objectAtIndex:3] boolValue];
 NSInteger environment = EnvironmentProduction;
 NSArray *brokerConfig = nil;
 //NSLog(@"isLeprechaun %@",[command.arguments objectAtIndex:2]);
 NSLog(isLeprechaun ? @"true" : @"false");
 @try {
-    brokerConfig = [command.arguments objectAtIndex:3];
+    brokerConfig = [command.arguments objectAtIndex:4];
 }
 @catch (NSException *exception) {
 
@@ -144,7 +145,7 @@ else if([environmentStr isEqualToString:@"development"]) {
        } else {
         environment = EnvironmentStaging;
        }
-GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName brokerConfig:brokerConfig  apiEnvironment:environment isLeprechaunActive: isLeprechaun ? true : false];
+GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName brokerConfig:brokerConfig  apiEnvironment:environment isLeprechaunActive: isLeprechaun ? true : false isAmoEnabled:isAmoEnabled ? true : false];
 [SCGateway.shared setupWithConfig:config completion:^(BOOL success,NSError * error){
     if(success)
     {
