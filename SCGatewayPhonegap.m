@@ -125,17 +125,34 @@ NSLog(@"init Called Ios");
 NSString  *environmentStr = [command.arguments objectAtIndex:0];
 NSString *gatewayName = [command.arguments objectAtIndex:1];
 BOOL isLeprechaun = [[command.arguments objectAtIndex:2] boolValue];
-BOOL isAmoEnabled = [[command.arguments objectAtIndex:3] boolValue];
+BOOL isAmoEnabled = YES;//[[command.arguments objectAtIndex:3] boolValue];
 NSInteger environment = EnvironmentProduction;
 NSArray *brokerConfig = nil;
 //NSLog(@"isLeprechaun %@",[command.arguments objectAtIndex:2]);
 NSLog(isLeprechaun ? @"true" : @"false");
 @try {
-    brokerConfig = [command.arguments objectAtIndex:4];
+    if([[command.arguments objectAtIndex:3] isKindOfClass:[NSArray class]]){
+        brokerConfig = [command.arguments objectAtIndex:3];
+    }
+    
 }
 @catch (NSException *exception) {
 
 }
+
+@try {
+    if([[command.arguments objectAtIndex:3] isKindOfClass:[NSArray class]]){
+        BOOL newBOOl = [[command.arguments objectAtIndex:4] boolValue];
+       isAmoEnabled = newBOOl;
+    } else {
+        BOOL newBOOl = [[command.arguments objectAtIndex:3] boolValue];
+        isAmoEnabled = newBOOl;
+    }
+}
+@catch (NSException *exception) {
+
+}
+
 
 if([environmentStr isEqualToString:@"production"]) {
         environment = EnvironmentProduction;

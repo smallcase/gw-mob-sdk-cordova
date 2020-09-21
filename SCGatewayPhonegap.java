@@ -46,16 +46,32 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
         }
         ArrayList<String> brokerList = new ArrayList<String>();
         try{
-            JSONArray jsonBrokerList = (JSONArray)args.get(4);
+            JSONArray jsonBrokerList = (JSONArray)args.get(3);
             if (jsonBrokerList != null) { 
                 int len = jsonBrokerList.length();
                 for (int i=0;i<len;i++){ 
                  brokerList.add(jsonBrokerList.get(i).toString());
                 } 
              } 
-        }catch(JSONException e){}
+        }catch(Exception e){
+        }
 
-        SmallcaseGatewaySdk.INSTANCE.setConfigEnvironment(new Environment(buildType,args.getString(1),(Boolean)args.get(2),(Boolean)args.get(3),brokerList),new SmallcaseGatewayListeners(){
+        Boolean isAmoEnabled = true;
+
+        try{
+            if(args.get(3) instanceof Boolean){
+            isAmoEnabled = (Boolean)args.get(3);
+            } else if (args.get(4) instanceof Boolean){
+            isAmoEnabled = (Boolean)args.get(4);
+            }
+        }catch (Exception e)
+        {
+
+        }
+        
+
+
+        SmallcaseGatewaySdk.INSTANCE.setConfigEnvironment(new Environment(buildType,args.getString(1),(Boolean)args.get(2),isAmoEnabled,brokerList),new SmallcaseGatewayListeners(){
             @Override
             public void onGatewaySetupSuccessfull() {
                 JSONObject jo = new JSONObject();
