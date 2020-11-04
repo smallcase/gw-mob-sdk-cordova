@@ -33,10 +33,10 @@
 </config-file>
 <podspec>
       <config>
-        <source url="https://gitlab.com/smallcase/mobile/gateway/cocoapodspecs.git" />
+        <source url="https://gitlab.com/scGatewayOS/cocoapodspecs.git" />
       </config>
       <pods use-frameworks="true" >
-        <pod name="SCGateway" spec="~> 2.0.7" />
+        <pod name="SCGateway" spec="~> 2.1.3" />
       </pods>
 </podspec>
  <header-file src="SCGatewayPhonegap.h" />
