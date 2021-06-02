@@ -13,6 +13,7 @@ import android.content.Context;
 import android.
 widget.Toast;
 import com.smallcase.gateway.data.models.Environment;
+import com.smallcase.gateway.data.SmallcaseLogoutListener;
 import com.smallcase.gateway.data.SmallcaseGatewayListeners;
 import com.smallcase.gateway.data.requests.InitRequest;
 import com.smallcase.gateway.data.models.InitialisationResponse;
@@ -133,8 +134,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             }
         });
         return true;
-    }else if(action.equals("triggerTransaction"))
-    {
+    } else if(action.equals("triggerTransaction")) {
         SmallcaseGatewaySdk.INSTANCE.triggerTransaction(this.cordova.getActivity(),args.getString(0),new TransactionResponseListener() {
             @Override
             public void onSuccess(TransactionResult transactionResult) { 
@@ -155,7 +155,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             }
         }); 
         return true;
-    }else if(action.equals("triggerLeadGen")){
+    } else if(action.equals("triggerLeadGen")) {
         HashMap<String,String> map = new HashMap<String,String>();
         if(args.get(0) instanceof JSONObject)
             {
@@ -169,6 +169,39 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             }
         }
         SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(),map);
+
+        return true;
+    } else if(action.equals("logout")) {
+
+        SmallcaseGatewaySdk.INSTANCE.logoutUser(this.cordova.getActivity(), new SmallcaseLogoutListener() {
+            
+            @Override
+            public void onLogoutSuccessfull() {
+                JSONObject jo = new JSONObject();
+                
+                try{
+                    jo.put("success", true);
+                } catch(JSONException e) {
+
+                }
+                
+                callbackContext.success(jo);
+            }
+
+            @Override
+            public void onLogoutFailed(int errorCode, String errorMessage) {
+                try {
+                    JSONObject jo = new JSONObject();
+                    jo.put("errorCode", errorCode);
+                    jo.put("errorMessage", errorMessage);
+                    callbackContext.error(jo);
+                } catch(JSONException e) {
+                    callbackContext.error("JSONException");
+                }
+
+            }
+
+        });
 
         return true;
     }

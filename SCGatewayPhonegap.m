@@ -189,4 +189,24 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
     [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict];
 }
 
+- (void)logout:(CDVInvokedUrlCommand*)command{
+    __block CDVPluginResult *pluginResult = nil;
+    [SCGateway.shared logoutUserWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] completion:^(BOOL success, NSError * error) {
+        if(success) {
+           CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];  
+        } else {
+            NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+                        [responseDict setValue:[NSNumber numberWithBool:false] forKey:@"success"];
+                        if(error != nil)
+                        {
+                            [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
+                        [responseDict setValue:error.domain  forKey:@"error"];
+                        }
+                        
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:responseDict];
+                        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }];
+}
 @end

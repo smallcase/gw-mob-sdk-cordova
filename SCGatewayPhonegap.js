@@ -40,6 +40,16 @@ exports.triggerLeadGen = function(args)
         args);
 };
 
+exports.logout = function(successCallback,failureCallback,args)
+{
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "logout",
+        args
+        );
+};
 
 exports.ENVIRONMENT = {
     PRODUCTION: 'production',
