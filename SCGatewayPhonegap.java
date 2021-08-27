@@ -2,6 +2,7 @@ package com.scgateway.phonegap;
 
 import com.smallcase.gateway.portal.SmallcaseGatewaySdk;
 import org.apache.cordova.*;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -168,7 +169,29 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 map.put(key,value);
             }
         }
-        SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(),map);
+        SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(), map, new TransactionResponseListener() {
+            @Override
+            public void onSuccess(@NotNull TransactionResult transactionResult) {
+                try {
+                    JSONObject jo = new JSONObject(transactionResult.getData());
+                    callbackContext.success(jo);
+                } catch (JSONException e) {
+                    callbackContext.error("JSONException");
+                }
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                try {
+                    JSONObject jo = new JSONObject();
+                    jo.put("errorCode", errorCode);
+                    jo.put("errorMessage", errorMessage);
+                    callbackContext.error(jo);
+                } catch(JSONException e) {
+                    callbackContext.error("JSONException");
+                }
+            }
+        });
 
         return true;
     } else if(action.equals("logout")) {

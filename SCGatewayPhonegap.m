@@ -61,9 +61,9 @@
             NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
             [responseDict setValue:@"CONNECT"  forKey:@"transaction"];
             [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
-            if (res.authToken != nil)
+            if (res.response != nil)
             {
-                 [responseDict setValue:res.authToken forKey:@"data"];
+                 [responseDict setValue:res.response forKey:@"data"];
             }
             double delayInSeconds = 0.5;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -77,6 +77,7 @@
             [dict setValue: trxResponse.authToken  forKey:@"smallcaseAuthToken"];
             [dict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
             [dict setValue: trxResponse.transactionId forKey:@"transactionId"];
+            [dict setValue: trxResponse.broker forKey:@"broker"];
             //[dict setValue:tranxId forKey:@"transactionId"];
             NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
             [responseDict setValue:@"HOLDING_IMPORT"  forKey:@"transaction"];
@@ -186,7 +187,10 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
 
 - (void)triggerLeadGen:(CDVInvokedUrlCommand*)command{
     NSDictionary *dict = [command.arguments objectAtIndex:0];
-    [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict];
+    [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict completion:^(NSString * leadStatusResponse) {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:leadStatusResponse];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 - (void)logout:(CDVInvokedUrlCommand*)command{

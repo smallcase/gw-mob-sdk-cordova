@@ -30,11 +30,21 @@ exports.triggerTransaction = function(successCallback,failureCallback,args)
         args);
 };
 
-exports.triggerLeadGen = function(args)
+// exports.triggerLeadGen = function(args)
+// {
+//     cordova.exec(
+//         function(winParam){},
+//         function(error){},
+//         "SCGatewayPhonegap",
+//         "triggerLeadGen",
+//         args);
+// };
+
+exports.triggerLeadGen = function(successCallback, failureCallback, args)
 {
     cordova.exec(
-        function(winParam){},
-        function(error){},
+        successCallback,
+        failureCallback,
         "SCGatewayPhonegap",
         "triggerLeadGen",
         args);
