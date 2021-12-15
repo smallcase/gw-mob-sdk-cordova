@@ -1,13 +1,14 @@
 repositories {
     maven {
-        url "http://artifactory.smallcase.com/artifactory/gradle-dev-local"
+        url "https://artifactory.smallcase.com/artifactory/gradle-dev-local"
         credentials {
             username "cordova_plugin_user"
             password "smallcaseCordovaPassword"
         }
     }
+    mavenCentral()
 }
 
 dependencies {
-implementation 'com.smallcase.gateway:sdk:3.0.1';
+implementation 'com.smallcase.gateway:sdk:3.1.10';
 }
