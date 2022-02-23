@@ -61,6 +61,16 @@ exports.logout = function(successCallback,failureCallback,args)
         );
 };
 
+exports.launchSmallplug = function(successCallback, failureCallback, args) {
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "launchSmallplug",
+        args
+    );
+};
+
 exports.ENVIRONMENT = {
     PRODUCTION: 'production',
     DEVELOPMENT: 'development',
@@ -70,7 +80,8 @@ exports.ENVIRONMENT = {
 exports.TRANSACTION_INTENT = {
     CONNECT: 'CONNECT',
     TRANSACTION: 'TRANSACTION',
-    HOLDINGS_IMPORT: 'HOLDINGS_IMPORT'
+    HOLDINGS_IMPORT: 'HOLDINGS_IMPORT',
+    FETCH_FUNDS: 'FETCH_FUNDS'
 };
 
 

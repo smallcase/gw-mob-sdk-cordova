@@ -19,12 +19,12 @@
             NSLog(@"%@", error.domain);
             double delayInSeconds = 0.5;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
             NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
             [responseDict setValue:[NSNumber numberWithBool:false] forKey:@"success"];
             [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
             [responseDict setValue:error.domain  forKey:@"error"];
-             [responseDict setValue:@"ERROR"  forKey:@"transaction"];
+            [responseDict setValue:@"ERROR"  forKey:@"transaction"];
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             });
@@ -61,8 +61,7 @@
             NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
             [responseDict setValue:@"CONNECT"  forKey:@"transaction"];
             [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
-            if (res.response != nil)
-            {
+            if (res.response != nil) {
                  [responseDict setValue:res.response forKey:@"data"];
             }
             double delayInSeconds = 0.5;
@@ -93,6 +92,54 @@
 
     }];
 }
+
+- (void)launchSmallplug:(CDVInvokedUrlCommand *)command {
+    __block CDVPluginResult *pluginResult = nil;
+    
+    NSString  *targetEndpoint = [command.arguments objectAtIndex:0];
+    NSString *params = [command.arguments objectAtIndex:1];
+    
+    SmallplugData *smallplugData = [[SmallplugData alloc] init:targetEndpoint :params];
+    
+    [SCGateway.shared launchSmallPlugWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] smallplugData:smallplugData completion:^(id smallplugResponse, NSError * error) {
+        
+        NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+        
+        if (error != nil) {
+            NSLog(@"%@", error.domain);
+            double delayInSeconds = 0.5;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+                [responseDict setValue:[NSNumber numberWithBool:false] forKey:@"success"];
+                [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
+                [responseDict setValue:error.domain  forKey:@"error"];
+                
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            });
+        } else {
+            
+            if ([smallplugResponse isKindOfClass: [NSString class]]) {
+                NSLog(@"%@", smallplugResponse);
+                
+                [responseDict setValue:[NSNumber numberWithBool: true] forKey:@"success"];
+                [responseDict setValue:smallplugResponse forKey:@"smallcaseAuthToken"];
+                
+                double delayInSeconds = 0.5;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                    
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    
+                });
+            }
+        }
+        
+    }];
+}
+
 -(void)initSDK:(CDVInvokedUrlCommand*)command{
     __block CDVPluginResult *pluginResult = nil;
          NSString *authToken = [command.arguments objectAtIndex:0];
