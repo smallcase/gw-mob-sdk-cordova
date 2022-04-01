@@ -1,8 +1,16 @@
 var exec = require('cordova/exec');
-
+var plugin_list = require('cordova/plugin_list');
 
 exports.setConfigEnvironment = function(successCallback,failureCallback,args)
-{
+{   
+    cordova.exec(
+        {},
+        {},
+        "SCGatewayPhonegap",
+        "setCordovaSdkVersion",
+        [plugin_list.metadata['com.scgateway.phonegap']]
+    );
+
     cordova.exec(
         successCallback,
         failureCallback,
@@ -83,36 +91,3 @@ exports.TRANSACTION_INTENT = {
     HOLDINGS_IMPORT: 'HOLDINGS_IMPORT',
     FETCH_FUNDS: 'FETCH_FUNDS'
 };
-
-
-/*var SCGatewayPhonegap = {
-
-    init: function() {
-    
-    },
-    
-    invoke: function() {
-    cordova.exec(function(winParam) {},
-    function(error) {},
-    “InstabugPhoneGap”,
-    “invoke”,
-    []);
-    
-    },
-    
-    invokeBugReporter: function() {
-    cordova.exec(function(winParam) {},
-    function(error) {},
-    “InstabugPhoneGap”,
-    “invokeBugReporter”,
-    []);
-    },
-    
-    invokeFeedbackSender: function() {
-    cordova.exec(function(winParam) {},
-    function(error) {},
-    “InstabugPhoneGap”,
-    “invokeFeedbackSender”,
-    []);
-    },
-    }*/

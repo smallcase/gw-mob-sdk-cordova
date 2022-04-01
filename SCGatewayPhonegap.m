@@ -8,6 +8,15 @@
 
 @implementation SCGatewayPhonegap
 
+- (void)setCordovaSdkVersion:(CDVInvokedUrlCommand*)command{
+    NSLog(@"setting SDK version");
+    
+    [SCGateway.shared setSDKTypeWithType:@"cordova"];
+    
+    NSString *versionString = [command.arguments objectAtIndex:0];
+    [SCGateway.shared setHybridSDKVersionWithVersion: versionString];
+}
+
 -(void)triggerTransaction:(CDVInvokedUrlCommand*)command{
     NSLog(@"transaction triggered");
         __block CDVPluginResult *pluginResult = nil;

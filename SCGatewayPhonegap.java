@@ -39,6 +39,10 @@ mCordova = cordova;
 @Override
 public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException{
     switch (action) {
+        case "setCordovaSdkVersion":
+            SmallcaseGatewaySdk.INSTANCE.setSDKType("cordova");
+            SmallcaseGatewaySdk.INSTANCE.setHybridSDKVersion(String.valueOf(args.get(0)));
+
         case "setConfigEnvironment":
             Environment.PROTOCOL buildType;
             switch (args.getString(0)) {
