@@ -7,5 +7,7 @@
 - (void)triggerLeadGen:(CDVInvokedUrlCommand*)command;
 - (void)logout:(CDVInvokedUrlCommand*)command;
 - (void)launchSmallplug:(CDVInvokedUrlCommand*)command;
+- (void)setCordovaSdkVersion:(CDVInvokedUrlCommand*)command;
+- (void)showOrders:(CDVInvokedUrlCommand*)command;
 @end
 

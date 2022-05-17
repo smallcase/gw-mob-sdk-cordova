@@ -1,5 +1,6 @@
 package com.scgateway.phonegap;
 
+import com.smallcase.gateway.data.listeners.LeadGenResponseListener;
 import com.smallcase.gateway.data.models.SmallplugData;
 import com.smallcase.gateway.portal.SmallcaseGatewaySdk;
 import org.apache.cordova.*;
@@ -15,6 +16,10 @@ import android.content.Context;
 import android.util.Log;
 import android.
 widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.smallcase.gateway.data.models.Environment;
 import com.smallcase.gateway.data.SmallcaseLogoutListener;
 import com.smallcase.gateway.data.SmallcaseGatewayListeners;
@@ -39,6 +44,13 @@ mCordova = cordova;
 @Override
 public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException{
     switch (action) {
+        case "setCordovaSdkVersion":
+            SmallcaseGatewaySdk.INSTANCE.setSDKType("cordova");
+            SmallcaseGatewaySdk.INSTANCE.setHybridSDKVersion(String.valueOf(args.get(0)));
+        case "getSdkVersion":
+            String nativeSdkVersion = "android:" + SmallcaseGatewaySdk.INSTANCE.getSdkVersion();
+            String cordovaSdkVersion = ",cordova:" + String.valueOf(args.get(0));
+            callbackContext.success(nativeSdkVersion+cordovaSdkVersion);
         case "setConfigEnvironment":
             Environment.PROTOCOL buildType;
             switch (args.getString(0)) {
@@ -143,17 +155,17 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
         case "triggerTransaction":
             SmallcaseGatewaySdk.INSTANCE.triggerTransaction(this.cordova.getActivity(), args.getString(0), new TransactionResponseListener() {
                 @Override
-                public void onSuccess(TransactionResult transactionResult) {
+                public void onSuccess(@NonNull TransactionResult transactionResult) {
                     callbackContext.success(convertToJson(transactionResult));
                 }
 
                 @Override
-                public void onError(int errorCode, String errorMessage) {
+                public void onError(int errorCode, @NonNull String errorMessage, @Nullable String data) {
+
                     try {
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", errorCode);
                         jo.put("errorMessage", errorMessage);
-                        callbackContext.error(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         callbackContext.error("JSONException");
@@ -213,31 +225,10 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
             }
 
-            SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(), map, new TransactionResponseListener() {
+            SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(), map, new LeadGenResponseListener() {
                 @Override
-                public void onSuccess(@NotNull TransactionResult transactionResult) {
-                    try {
-                        if (transactionResult.getData() != null && !transactionResult.getData().isEmpty()) {
-                            JSONObject jo = new JSONObject(transactionResult.getData());
-                            callbackContext.success(jo);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        callbackContext.error("JSONException");
-                    }
-                }
-
-                @Override
-                public void onError(int errorCode, String errorMessage) {
-                    try {
-                        JSONObject jo = new JSONObject();
-                        jo.put("errorCode", errorCode);
-                        jo.put("errorMessage", errorMessage);
-                        callbackContext.error(jo);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        callbackContext.error("JSONException");
-                    }
+                public void onSuccess(@NonNull String leadStatusResponse) {
+                    callbackContext.success(leadStatusResponse);
                 }
             });
 
@@ -274,21 +265,62 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
 
             });
 
+            case "showOrders":
+
+            ArrayList<String> showOrdersBrokerList = new ArrayList<String>();
+            try {
+                JSONArray jsonBrokerList = (JSONArray) args.get(0);
+                if (jsonBrokerList != null) {
+                    for (int i = 0; i < jsonBrokerList.length(); i++) {
+                        showOrdersBrokerList.add(jsonBrokerList.get(i).toString());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            SmallcaseGatewaySdk.INSTANCE.showOrders(this.cordova.getActivity(), showOrdersBrokerList, new DataListener<Object>() {
+                
+                @Override
+                public void onSuccess(Object o) {
+                    JSONObject jo = new JSONObject();
+                    try {
+                        jo.put("success", true);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    callbackContext.success(jo);
+                }
+
+                @Override
+                public void onFailure(int errorCode, @NonNull String errorMessage) {
+                    try {
+                        JSONObject jo = new JSONObject();
+                        jo.put("errorCode", errorCode);
+                        jo.put("errorMessage", errorMessage);
+                        callbackContext.error(jo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callbackContext.error("JSONException");
+                    }
+                }
+                
+            });
+
             return true;
     }
 
 return false;
 }
 
-private JSONObject convertToJson(TransactionResult transactionResult)
-{
+private JSONObject convertToJson(TransactionResult transactionResult) {
     JSONObject jsonObj = new JSONObject();
-    if(transactionResult.getData()!=null)
-    {
+    if(transactionResult.getData()!=null) {
         try {
             JSONObject jsonObject = new JSONObject(transactionResult.getData());
             jsonObj.put("data",jsonObject);
-         }catch (JSONException err){
+         } catch (JSONException err){
             err.printStackTrace();
             try {
                 jsonObj.put("data",transactionResult.getData());
@@ -298,31 +330,11 @@ private JSONObject convertToJson(TransactionResult transactionResult)
              
          }
     }
-    if(transactionResult.getTransaction()!=null)
-    {
+    if(transactionResult.getTransaction()!=null) {
         try {
             jsonObj.put("transaction",transactionResult.getTransaction().toString()); 
-         }catch (JSONException err){}
+         } catch (JSONException err){}
       
-    }
-    try {
-        jsonObj.put("success",transactionResult.getSuccess()); 
-     }catch (JSONException err){}
-    
-
-    if(transactionResult.getErrorCode()!=null)
-    {
-        try {
-            jsonObj.put("errorCode",transactionResult.getErrorCode());
-         }catch (JSONException err){}
-        
-    }
-    if(transactionResult.getError()!=null)
-    {
-        try {
-            jsonObj.put("error",transactionResult.getError());
-         }catch (JSONException err){}
-       
     }
 
     return jsonObj;

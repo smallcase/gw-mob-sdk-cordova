@@ -8,6 +8,27 @@
 
 @implementation SCGatewayPhonegap
 
+- (void)setCordovaSdkVersion:(CDVInvokedUrlCommand*)command{
+    NSLog(@"setting SDK version");
+    
+    [SCGateway.shared setSDKTypeWithType:@"cordova"];
+    
+    NSString *versionString = [command.arguments objectAtIndex:0];
+    [SCGateway.shared setHybridSDKVersionWithVersion: versionString];
+}
+
+-(void)getSdkVersion:(CDVInvokedUrlCommand*)command {
+    
+    __block CDVPluginResult *pluginResult = nil;
+    
+    NSString *nativeSdkString = [NSString stringWithFormat: @"ios:%@", [SCGateway.shared getSdkVersion]];
+    NSString *cordovaSdkString = [NSString stringWithFormat: @",cordova:%@", [command.arguments objectAtIndex:0]];
+    
+    NSString *result = [nativeSdkString stringByAppendingString: cordovaSdkString];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 -(void)triggerTransaction:(CDVInvokedUrlCommand*)command{
     NSLog(@"transaction triggered");
         __block CDVPluginResult *pluginResult = nil;
@@ -257,6 +278,30 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
                         
                         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:responseDict];
                         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }];
+}
+
+- (void) showOrders:(CDVInvokedUrlCommand *)command {
+    
+    __block CDVPluginResult *pluginResult = nil;
+    
+    [SCGateway.shared showOrdersWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] completion:^(BOOL success, NSError * error) {
+        
+        if (success) {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } else {
+            
+            NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+            
+            if(error != nil) {
+                [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
+                [responseDict setValue:error.domain  forKey:@"error"];
+            }
+            
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:responseDict];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     }];
 }
