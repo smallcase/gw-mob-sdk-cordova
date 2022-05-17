@@ -1,6 +1,17 @@
 var exec = require('cordova/exec');
 var plugin_list = require('cordova/plugin_list');
 
+exports.getSdkVersion = function(successCallback, failureCallback) 
+{
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "getSdkVersion",
+        [plugin_list.metadata['com.scgateway.phonegap']]
+    );
+}
+
 exports.setConfigEnvironment = function(successCallback,failureCallback,args)
 {   
     cordova.exec(
@@ -38,23 +49,23 @@ exports.triggerTransaction = function(successCallback,failureCallback,args)
         args);
 };
 
-// exports.triggerLeadGen = function(args)
-// {
-//     cordova.exec(
-//         function(winParam){},
-//         function(error){},
-//         "SCGatewayPhonegap",
-//         "triggerLeadGen",
-//         args);
-// };
+exports.triggerLeadGen = function(args)
+{
+    cordova.exec(
+        function(winParam){},
+        function(error){},
+        "SCGatewayPhonegap",
+        "triggerLeadGen",
+        args);
+};
 
-exports.triggerLeadGen = function(successCallback, failureCallback, args)
+exports.triggerLeadGenWithStatus = function(successCallback, failureCallback, args)
 {
     cordova.exec(
         successCallback,
         failureCallback,
         "SCGatewayPhonegap",
-        "triggerLeadGen",
+        "triggerLeadGenWithStatus",
         args);
 };
 
@@ -67,6 +78,16 @@ exports.logout = function(successCallback,failureCallback,args)
         "logout",
         args
         );
+};
+
+exports.showOrders = function(successCallback, failureCallback, args) {
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "showOrders",
+        args
+    );
 };
 
 exports.launchSmallplug = function(successCallback, failureCallback, args) {
