@@ -29,6 +29,15 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+-(void)isUserConnected:(CDVInvokedUrlCommand *)command {
+    
+    __block CDVPluginResult *pluginResult = nil;
+    
+    BOOL isUserConneced = [SCGateway.shared isUserConnected];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:isUserConneced];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 -(void)triggerTransaction:(CDVInvokedUrlCommand*)command{
     NSLog(@"transaction triggered");
         __block CDVPluginResult *pluginResult = nil;
@@ -253,12 +262,17 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
 
 }
 
-- (void)triggerLeadGen:(CDVInvokedUrlCommand*)command{
+- (void)triggerLeadGenWithStatus:(CDVInvokedUrlCommand*)command{
     NSDictionary *dict = [command.arguments objectAtIndex:0];
     [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict completion:^(NSString * leadStatusResponse) {
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:leadStatusResponse];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
+}
+
+- (void)triggerLeadGen:(CDVInvokedUrlCommand*)command{
+    NSDictionary *dict = [command.arguments objectAtIndex:0];
+    [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict];
 }
 
 - (void)logout:(CDVInvokedUrlCommand*)command{

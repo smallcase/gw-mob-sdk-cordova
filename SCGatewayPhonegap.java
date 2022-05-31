@@ -51,6 +51,8 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             String nativeSdkVersion = "android:" + SmallcaseGatewaySdk.INSTANCE.getSdkVersion();
             String cordovaSdkVersion = ",cordova:" + String.valueOf(args.get(0));
             callbackContext.success(nativeSdkVersion+cordovaSdkVersion);
+        case "isUserConnected":
+            callbackContext.success(String.valueOf(SmallcaseGatewaySdk.INSTANCE.isUserConnected()));
         case "setConfigEnvironment":
             Environment.PROTOCOL buildType;
             switch (args.getString(0)) {
@@ -213,7 +215,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             });
 
             return true;
-        case "triggerLeadGen":
+        case "triggerLeadGenWithStatus":
             HashMap<String, String> map = new HashMap<String, String>();
             if (args.get(0) instanceof JSONObject) {
                 JSONObject obj = (JSONObject) args.get(0);
@@ -231,6 +233,22 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                     callbackContext.success(leadStatusResponse);
                 }
             });
+
+            return true;
+
+        case "triggerLeadGen":
+            HashMap<String, String> leadGenMap = new HashMap<String, String>();
+            if (args.get(0) instanceof JSONObject) {
+                JSONObject obj = (JSONObject) args.get(0);
+                Iterator<String> keys = obj.keys();
+                while (keys.hasNext()) {
+                    String key = (String) keys.next(); // First key in your json object
+                    String value = (String) obj.getString(key);
+                    leadGenMap.put(key, value);
+                }
+            }
+            
+            SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(), leadGenMap);
 
             return true;
         case "logout":
@@ -265,6 +283,8 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
 
             });
 
+            return true;
+            
             case "showOrders":
 
             ArrayList<String> showOrdersBrokerList = new ArrayList<String>();
