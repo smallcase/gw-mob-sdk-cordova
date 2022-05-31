@@ -1,6 +1,6 @@
 {
   "name": "com.scgateway.phonegap",
-  "version": "0.0.1",
+  "version": "2.5.1",
   "description": "Scgateway wrapper Cordova Plugin",
   "cordova": {
     "id": "com.scgateway.phonegap",
@@ -22,6 +22,24 @@
       "version": ">=3.7.0"
     }
   ],
-  "author": "",
-  "license": "ISC"
+  "author": "ankit-deshmukh",
+  "license": "ISC",
+  "main": "SCGatewayPhonegap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smallcase/gw-mob-sdk-cordova.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smallcase/gw-mob-sdk-cordova/issues"
+  },
+  "homepage": "https://github.com/smallcase/gw-mob-sdk-cordova#readme",
+  "dependencies": {
+    "standard-version": "^9.5.0"
+  }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
  xmlns:android="http://schemas.android.com/apk/res/android"
- id="com.scgateway.phonegap" version="2.5.0">
+ id="com.scgateway.phonegap" version="2.5.1">
  <name>Scgateway SDK</name>
  <description>Scgateway wrapper Cordova Plugin</description>
  <keywords>scgateway,gateway</keywords>
@@ -42,7 +42,7 @@
         <source url="https://github.com/smallcase/cocoapodspecs.git" />
       </config>
       <pods use-frameworks="true" >
-        <pod name="SCGateway" spec="3.1.19" />
+        <pod name="SCGateway" spec="3.2.4" />
       </pods>
 </podspec>
  <header-file src="SCGatewayPhonegap.h" />
