@@ -31,6 +31,7 @@ import com.smallcase.gateway.data.listeners.TransactionResponseListener;
 import com.smallcase.gateway.data.models.TransactionResult;
 import com.smallcase.gateway.data.listeners.SmallPlugResponseListener;
 import com.smallcase.gateway.data.models.SmallPlugResult;
+import com.smallcase.gateway.portal.SmallplugPartnerProps;
 
 public class SCGatewayPhonegap extends CordovaPlugin {
 
@@ -212,9 +213,58 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
 
                 }
 
-            });
+            }, null);
 
             return true;
+
+        case "launchSmallplugWithBranding":
+
+            SmallcaseGatewaySdk.INSTANCE.launchSmallPlug(
+                    this.cordova.getActivity(),
+                    new SmallplugData(args.getString(0),
+                            args.getString(1)), new SmallPlugResponseListener() {
+
+                @Override
+                public void onSuccess(@NotNull SmallPlugResult smallPlugResult) {
+
+                    Log.d("SCGatewayPhoneGap", "smallplug onSuccess: " + smallPlugResult.toString());
+
+                    try {
+                        JSONObject jo = new JSONObject();
+                        jo.put("success", smallPlugResult.getSuccess());
+                        jo.put("smallcaseAuthToken", smallPlugResult.getSmallcaseAuthToken());
+                        callbackContext.success(jo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callbackContext.error("JSONException");
+                    }
+                }
+
+                @Override
+                public void onFailure(int i, @NotNull String s) {
+
+                    Log.d("SCGatewayPhoneGap", "smallplug onFailure: " + i + s);
+
+                    try {
+                        JSONObject jo = new JSONObject();
+                        jo.put("errorCode", i);
+                        jo.put("errorMessage", s);
+                        callbackContext.error(jo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callbackContext.error("JSONException");
+                    }
+
+                }
+
+            }, new SmallplugPartnerProps(
+                            args.getString(2),
+                            args.getDouble(3),
+                            args.getString(4),
+                            args.getDouble(5)
+                    ));
+
+            return true;    
         case "triggerLeadGenWithStatus":
             HashMap<String, String> map = new HashMap<String, String>();
             if (args.get(0) instanceof JSONObject) {

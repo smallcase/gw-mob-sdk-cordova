@@ -100,6 +100,16 @@ exports.launchSmallplug = function(successCallback, failureCallback, args) {
     );
 };
 
+exports.launchSmallplugWithBranding = function(successCallback, failureCallback, args) {
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "launchSmallplugWithBranding",
+        args
+    );
+};
+
 exports.isUserConnected = function(successCallback, failureCallback) {
     cordova.exec(
         successCallback,
