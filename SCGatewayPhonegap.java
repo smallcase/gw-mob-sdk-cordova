@@ -258,10 +258,10 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
 
             }, new SmallplugPartnerProps(
-                            args.getString(2),
-                            args.getDouble(3),
-                            args.getString(4),
-                            args.getDouble(5)
+                        args.getString(2) == null || args.getString(2).length() < 6 ? "#2F363F" : args.getString(2),
+                        args.getDouble(3),
+                        args.getString(4) == null || args.getString(4).length() < 6 ? "#FFFFFF" : args.getString(4),
+                        args.getDouble(5)
                     ));
 
             return true;    
