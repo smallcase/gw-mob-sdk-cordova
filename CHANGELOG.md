@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.5.1...v2.6.0) (2022-06-22)
+
+
+### Bug Fixes
+
+* android dm default values ([b91d99c](https://github.com/smallcase/gw-mob-sdk-cordova/commit/b91d99cdcf94577f823c9af73ada6384df5730cd))
+
 ### 2.5.1 (2022-05-31)
 
 
