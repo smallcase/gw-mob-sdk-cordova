@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.6.0...v2.6.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* null pointer exceptions in DM partner branding (android) ([52e25c9](https://github.com/smallcase/gw-mob-sdk-cordova/commit/52e25c9b7486aafb518da9e5741d68dc8f9e1396))
+
 ## [2.6.0](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.5.1...v2.6.0) (2022-06-22)
 
 
