@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.2](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.6.1...v2.6.2) (2022-06-29)
+
+
+### Bug Fixes
+
+* lead gen response not returned if user is navigating via broker chooser ([de43168](https://github.com/smallcase/gw-mob-sdk-cordova/commit/de43168d79ef0eeb3d44fc1bc27c4856131024ea))
+
 ### [2.6.1](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.6.0...v2.6.1) (2022-06-27)
 
 
