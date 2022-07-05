@@ -169,6 +169,12 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", errorCode);
                         jo.put("errorMessage", errorMessage);
+
+                        if (data != null && !data.isEmpty()) {
+                            jo.put("data", new JSONObject(data));
+                        }
+                        callbackContext.error(jo);
+                        
                     } catch (JSONException e) {
                         e.printStackTrace();
                         callbackContext.error("JSONException");
