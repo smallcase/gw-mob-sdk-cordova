@@ -372,6 +372,7 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
             if(error != nil) {
                 [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
                 [responseDict setValue:error.domain  forKey:@"error"];
+                [responseDict setValue:[error.userInfo objectForKey: @"data"] forKey:@"data"];
             }
             
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:responseDict];
