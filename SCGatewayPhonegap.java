@@ -140,12 +140,13 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
 
                 @Override
-                public void onFailure(int errorCode, String errorMessage) {
+                public void onFailure(int errorCode, String errorMessage, String data) {
                     try {
                         JSONObject jo = new JSONObject();
                         jo.put("success", false);
                         jo.put("errorCode", errorCode);
                         jo.put("errorMessage", errorMessage);
+                        jo.put("data", data);
                         callbackContext.error(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -370,11 +371,12 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
 
                 @Override
-                public void onFailure(int errorCode, @NonNull String errorMessage) {
+                public void onFailure(int errorCode, @NonNull String errorMessage, String data) {
                     try {
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", errorCode);
                         jo.put("errorMessage", errorMessage);
+                        jo.put("data", data);
                         callbackContext.error(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();

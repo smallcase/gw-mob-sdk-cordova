@@ -54,6 +54,7 @@
             [responseDict setValue:[NSNumber numberWithBool:false] forKey:@"success"];
             [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
             [responseDict setValue:error.domain  forKey:@"error"];
+            [responseDict setValue:[error.userInfo objectForKey: @"data"] forKey:@"data"];
             [responseDict setValue:@"ERROR"  forKey:@"transaction"];
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -102,16 +103,20 @@
             });
         } else if([response isKindOfClass: [ObjcTransactionIntentHoldingsImport class]]) {
             ObjcTransactionIntentHoldingsImport *trxResponse = response ;
+            
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
             [dict setValue: trxResponse.authToken  forKey:@"smallcaseAuthToken"];
             [dict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
             [dict setValue: trxResponse.transactionId forKey:@"transactionId"];
             [dict setValue: trxResponse.broker forKey:@"broker"];
+            [dict setValue: trxResponse.signup forKey:@"signup"];
             //[dict setValue:tranxId forKey:@"transactionId"];
+            
             NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
             [responseDict setValue:@"HOLDING_IMPORT"  forKey:@"transaction"];
             [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
             [responseDict setValue:dict forKey:@"data"];
+            
             double delayInSeconds = 0.5;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -328,6 +333,7 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
     [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict];
 }
 
+//MARK: logout
 - (void)logout:(CDVInvokedUrlCommand*)command{
     __block CDVPluginResult *pluginResult = nil;
     [SCGateway.shared logoutUserWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] completion:^(BOOL success, NSError * error) {
@@ -349,6 +355,7 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
     }];
 }
 
+//MARK: Show orders
 - (void) showOrders:(CDVInvokedUrlCommand *)command {
     
     __block CDVPluginResult *pluginResult = nil;
@@ -365,6 +372,7 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
             if(error != nil) {
                 [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
                 [responseDict setValue:error.domain  forKey:@"error"];
+                [responseDict setValue:[error.userInfo objectForKey: @"data"] forKey:@"data"];
             }
             
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:responseDict];
