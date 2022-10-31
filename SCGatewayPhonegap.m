@@ -128,6 +128,59 @@
     }];
 }
 
+//MARK: Trigger Mf Transaction
+-(void)triggerMfTransaction:(CDVInvokedUrlCommand*)command {
+     NSLog(@"transaction triggered");
+    __block CDVPluginResult *pluginResult = nil;
+    NSString *transactionId = [command.arguments objectAtIndex:0];
+    [SCGateway.shared
+         triggerMfTransactionWithPresentingController:
+         [[[UIApplication sharedApplication] keyWindow] rootViewController]
+         transactionId: transactionId
+         completion: ^(id response, NSError *error) {
+                if (error != nil) {
+                    NSLog(@"%@", error.domain);
+                double delayInSeconds = 0.5;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+                [responseDict setValue:[NSNumber numberWithBool:false] forKey:@"success"];
+                [responseDict setValue:[NSNumber numberWithInteger:error.code]  forKey:@"errorCode"];
+                [responseDict setValue:error.domain  forKey:@"error"];
+                [responseDict setValue:[error.userInfo objectForKey: @"data"] forKey:@"data"];
+                [responseDict setValue:@"ERROR"  forKey:@"transaction"];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                });
+            }
+
+            //MARK: intent - mf transaction
+            if ([response isKindOfClass: [ObjCTransactionIntentMfHoldingsImport class]]) {
+                NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+                ObjCTransactionIntentMfHoldingsImport *trxResponse = response;
+                NSData *decodedStringData = [[NSData alloc] initWithBase64EncodedString:trxResponse.data options: 0];
+                NSString *decodedResponse = [[NSString alloc] initWithData:decodedStringData encoding:1];
+                NSMutableDictionary *dict=[NSJSONSerialization JSONObjectWithData:[trxResponse.data dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
+                [responseDict setObject:dict forKey:@"data"];
+                [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+                [responseDict setObject:@"TRANSACTION"  forKey:@"transaction"];
+                [responseDict setObject:@"TRANSACTION"  forKey:@"transaction"];
+
+                [responseDict setObject:trxResponse.data forKey:@"data"];
+                NSLog(@"Decoded response %@", decodedResponse);
+                NSLog(@"TrxResponse data %@", trxResponse.data);
+                double delayInSeconds = 0.5;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            });
+                return;
+            }
+         }];
+
+                 }
+
 - (void)launchSmallplug:(CDVInvokedUrlCommand *)command {
     __block CDVPluginResult *pluginResult = nil;
     

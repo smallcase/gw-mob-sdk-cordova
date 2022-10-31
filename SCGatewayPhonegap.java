@@ -28,6 +28,7 @@ import com.smallcase.gateway.data.models.InitialisationResponse;
 import com.smallcase.gateway.data.listeners.DataListener;
 import com.google.gson.Gson;
 import com.smallcase.gateway.data.listeners.TransactionResponseListener;
+import com.smallcase.gateway.data.listeners.MFHoldingsResponseListener;
 import com.smallcase.gateway.data.models.TransactionResult;
 import com.smallcase.gateway.data.listeners.SmallPlugResponseListener;
 import com.smallcase.gateway.data.models.SmallPlugResult;
@@ -158,6 +159,33 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             return true;
         case "triggerTransaction":
             SmallcaseGatewaySdk.INSTANCE.triggerTransaction(this.cordova.getActivity(), args.getString(0), new TransactionResponseListener() {
+                @Override
+                public void onSuccess(@NonNull TransactionResult transactionResult) {
+                    callbackContext.success(convertToJson(transactionResult));
+                }
+
+                @Override
+                public void onError(int errorCode, @NonNull String errorMessage, @Nullable String data) {
+
+                    try {
+                        JSONObject jo = new JSONObject();
+                        jo.put("errorCode", errorCode);
+                        jo.put("errorMessage", errorMessage);
+
+                        if (data != null && !data.isEmpty()) {
+                            jo.put("data", new JSONObject(data));
+                        }
+                        callbackContext.error(jo);
+                        
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callbackContext.error("JSONException");
+                    }
+                }
+            });
+            return true;
+        case "triggerMfTransaction":
+            SmallcaseGatewaySdk.INSTANCE.triggerMfTransaction(this.cordova.getActivity(), args.getString(0), new MFHoldingsResponseListener() {
                 @Override
                 public void onSuccess(@NonNull TransactionResult transactionResult) {
                     callbackContext.success(convertToJson(transactionResult));

@@ -49,6 +49,16 @@ exports.triggerTransaction = function(successCallback,failureCallback,args)
         args);
 };
 
+exports.triggerMfTransaction = function(successCallback,failureCallback,args)
+{
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "triggerMfTransaction",
+        args);
+};
+
 exports.triggerLeadGen = function(args)
 {
     cordova.exec(
