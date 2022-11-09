@@ -79,6 +79,16 @@ exports.triggerLeadGenWithStatus = function(successCallback, failureCallback, ar
         args);
 };
 
+exports.triggerLeadGenWithLoginCta = function(successCallback, failureCallback, args)
+{
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "triggerLeadGenWithLoginCta",
+        args);
+};
+
 exports.logout = function(successCallback,failureCallback,args)
 {
     cordova.exec(

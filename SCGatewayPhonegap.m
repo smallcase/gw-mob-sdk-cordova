@@ -373,6 +373,23 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
 
 }
 
+- (void)triggerLeadGenWithLoginCta:(CDVInvokedUrlCommand*)command{
+    NSDictionary *userDetailsDict = [command.arguments objectAtIndex:0];
+    NSDictionary *utmDict = [command.arguments objectAtIndex:1];
+    NSDictionary *leadGenProps = [command.arguments objectAtIndex:2];
+
+    BOOL showLoginCta = false;
+
+    if([leadGenProps[@"showLoginCta"] boolValue] == 1) {
+        showLoginCta = true;
+    }
+
+    [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:userDetailsDict utmParams:utmDict retargeting:false showLoginCta:showLoginCta completion:^(NSString * leadStatusResponse) {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:leadStatusResponse];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
 - (void)triggerLeadGenWithStatus:(CDVInvokedUrlCommand*)command{
     NSDictionary *dict = [command.arguments objectAtIndex:0];
     [SCGateway.shared triggerLeadGenWithPresentingController:[[[UIApplication sharedApplication] keyWindow] rootViewController] params:dict completion:^(NSString * leadStatusResponse) {
