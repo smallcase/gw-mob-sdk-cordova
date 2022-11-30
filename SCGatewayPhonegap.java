@@ -28,6 +28,7 @@ import com.smallcase.gateway.data.models.InitialisationResponse;
 import com.smallcase.gateway.data.listeners.DataListener;
 import com.google.gson.Gson;
 import com.smallcase.gateway.data.listeners.TransactionResponseListener;
+import com.smallcase.gateway.data.listeners.MFHoldingsResponseListener;
 import com.smallcase.gateway.data.models.TransactionResult;
 import com.smallcase.gateway.data.listeners.SmallPlugResponseListener;
 import com.smallcase.gateway.data.models.SmallPlugResult;
@@ -183,6 +184,33 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
             });
             return true;
+        case "triggerMfTransaction":
+            SmallcaseGatewaySdk.INSTANCE.triggerMfTransaction(this.cordova.getActivity(), args.getString(0), new MFHoldingsResponseListener() {
+                @Override
+                public void onSuccess(@NonNull TransactionResult transactionResult) {
+                    callbackContext.success(convertToJson(transactionResult));
+                }
+
+                @Override
+                public void onError(int errorCode, @NonNull String errorMessage, @Nullable String data) {
+
+                    try {
+                        JSONObject jo = new JSONObject();
+                        jo.put("errorCode", errorCode);
+                        jo.put("errorMessage", errorMessage);
+
+                        if (data != null && !data.isEmpty()) {
+                            jo.put("data", new JSONObject(data));
+                        }
+                        callbackContext.error(jo);
+                        
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callbackContext.error("JSONException");
+                    }
+                }
+            });
+            return true;
         case "launchSmallplug":
 
             SmallcaseGatewaySdk.INSTANCE.launchSmallPlug(this.cordova.getActivity(), new SmallplugData(args.getString(0), args.getString(1)), new SmallPlugResponseListener() {
@@ -306,6 +334,53 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             }
             
             SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(this.cordova.getActivity(), leadGenMap);
+
+            return true;
+            case "triggerLeadGenWithLoginCta":
+            Log.d("SCGatewayPhoneGap", "triggerLeadGenWithLoginCta args: " + args);
+            HashMap<String, String> leadGenMapUserDetails = new HashMap<String, String>();
+            if (args.get(0) instanceof JSONObject) {
+                JSONObject obj = (JSONObject) args.get(0);
+                Iterator<String> keys = obj.keys();
+                while (keys.hasNext()) {
+                    String key = (String) keys.next(); // First key in your json object
+                    String value = (String) obj.getString(key);
+                    leadGenMapUserDetails.put(key, value);
+                }
+            }
+
+            HashMap<String, String> utmMap = new HashMap<String, String>();
+            if (args.get(1) instanceof JSONObject) {
+                JSONObject obj = (JSONObject) args.get(1);
+                Iterator<String> keys = obj.keys();
+                while (keys.hasNext()) {
+                    String key = (String) keys.next(); // First key in your json object
+                    String value = (String) obj.getString(key);
+                    utmMap.put(key, value);
+                }
+            }
+
+            boolean showLoginCta = false;
+            if (args.get(2) instanceof JSONObject) {
+                JSONObject obj = (JSONObject) args.get(2);
+                try {
+                    showLoginCta = obj.getBoolean("showLoginCta");
+                } catch (Exception e) {
+                }
+            }
+
+            SmallcaseGatewaySdk.INSTANCE.triggerLeadGen(
+                    this.cordova.getActivity(),
+                    leadGenMapUserDetails,
+                    utmMap,
+                    null,
+                    showLoginCta,
+                    new LeadGenResponseListener() {
+                        @Override
+                        public void onSuccess(@NonNull String leadStatusResponse) {
+                            callbackContext.success(leadStatusResponse);
+                        }
+                    });
 
             return true;
         case "logout":

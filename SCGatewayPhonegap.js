@@ -49,6 +49,16 @@ exports.triggerTransaction = function(successCallback,failureCallback,args)
         args);
 };
 
+exports.triggerMfTransaction = function(successCallback,failureCallback,args)
+{
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "triggerMfTransaction",
+        args);
+};
+
 exports.triggerLeadGen = function(args)
 {
     cordova.exec(
@@ -66,6 +76,16 @@ exports.triggerLeadGenWithStatus = function(successCallback, failureCallback, ar
         failureCallback,
         "SCGatewayPhonegap",
         "triggerLeadGenWithStatus",
+        args);
+};
+
+exports.triggerLeadGenWithLoginCta = function(successCallback, failureCallback, args)
+{
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "triggerLeadGenWithLoginCta",
         args);
 };
 
