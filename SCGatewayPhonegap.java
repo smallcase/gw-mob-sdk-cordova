@@ -27,6 +27,7 @@ import com.smallcase.gateway.data.requests.InitRequest;
 import com.smallcase.gateway.data.models.InitialisationResponse;
 import com.smallcase.gateway.data.listeners.DataListener;
 import com.google.gson.Gson;
+import com.smallcase.gateway.data.models.SmallcaseGatewayDataResponse;
 import com.smallcase.gateway.data.listeners.TransactionResponseListener;
 import com.smallcase.gateway.data.listeners.MFHoldingsResponseListener;
 import com.smallcase.gateway.data.models.TransactionResult;
@@ -383,6 +384,53 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                     });
 
             return true;
+            case "getUserInvestments":
+            ArrayList<String> iscidList = new ArrayList<String>();
+            try {
+                JSONArray jsonIscidList = (JSONArray) args.get(0);
+                if (jsonIscidList != null) {
+                    int len = jsonIscidList.length();
+                    for (int i = 0; i < len; i++) {
+                        iscidList.add(jsonIscidList.get(i).toString());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            SmallcaseGatewaySdk.INSTANCE.getUserInvestments(iscidList, new DataListener<SmallcaseGatewayDataResponse>() {
+
+                @Override
+                public void onSuccess(SmallcaseGatewayDataResponse response) {
+                    JSONObject jo = new JSONObject();
+                    try {
+                        callbackContext.success(response.getValue(new Gson()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        callbackContext.error("JSONException");
+                    }
+                }
+
+                @Override
+                public void onFailure(int errorCode, String errorMessage, String data) {
+                    try {
+                        JSONObject jo = new JSONObject();
+                        jo.put("errorCode", errorCode);
+                        jo.put("errorMessage", errorMessage);
+                        if(data != null) {
+                            jo.put("data", data);
+                        }
+                        callbackContext.error(jo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callbackContext.error("JSONException");
+                    }
+
+                }
+
+            });
+
+        return true;
         case "logout":
 
             SmallcaseGatewaySdk.INSTANCE.logoutUser(this.cordova.getActivity(), new SmallcaseLogoutListener() {
