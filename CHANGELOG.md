@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.7.0...v2.8.1) (2022-12-05)
+
+
+### Features
+
+* mf holdings support ([de47582](https://github.com/smallcase/gw-mob-sdk-cordova/commit/de47582b77b9112515b78c7430a1cdaf91db32af))
+* showLoginCta for leadgen ([033f199](https://github.com/smallcase/gw-mob-sdk-cordova/commit/033f199d19286acb370e49c34c23533799edc984))
+* user investments ([24c18d1](https://github.com/smallcase/gw-mob-sdk-cordova/commit/24c18d1c671d08524fb615e163b6b41f611f8610))
+
 ## [2.7.0](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.8.0...v2.7.0) (2022-08-03)
 
 ### [2.6.2](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.6.1...v2.6.2) (2022-07-05)
