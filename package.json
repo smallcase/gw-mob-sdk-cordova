@@ -1,6 +1,6 @@
 {
   "name": "com.scgateway.phonegap",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "description": "Scgateway wrapper Cordova Plugin",
   "cordova": {
     "id": "com.scgateway.phonegap",
