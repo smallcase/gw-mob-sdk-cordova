@@ -23,12 +23,6 @@
  <framework src="build.gradle" custom="true" type="gradleReference"/>
 <config-file target="AndroidManifest.xml" parent="/manifest">
  <uses-permission android:name="android.permission.INTERNET" />
- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
- <uses-permission android:name="android.permission.RECORD_AUDIO" />
- <uses-permission android:name="android.permission.CALL_PHONE" />
- <uses-permission android:name="android.permission.CAMERA" android:required="true"/>
- <uses-feature android:name="android.hardware.camera.any" android:required="true" />
  </config-file>
 </platform>
  <platform name="ios">
@@ -42,7 +36,7 @@
         <source url="https://github.com/smallcase/cocoapodspecs.git" />
       </config>
       <pods use-frameworks="true" >
-        <pod name="SCGateway" spec="3.9.4" />
+        <pod name="SCGateway" spec="4.0.2" />
       </pods>
 </podspec>
  <header-file src="SCGatewayPhonegap.h" />
