@@ -87,7 +87,35 @@
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             });
-        } else if([response isKindOfClass: [ObjCTransactionIntentConnect class]]) {
+        } 
+        // Handle ObjcMfTransactionIntentTransaction
+        else if ([response isKindOfClass: [ObjcMfTransactionIntentTransaction class]]) {
+            ObjcMfTransactionIntentTransaction *trxResponse = response;
+            NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+            [responseDict setValue:@"MF_TRANSACTION" forKey:@"transaction"];
+            [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+            [responseDict setValue:trxResponse.data forKey:@"data"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            });
+        }
+        // Handle ObjCTransactionIntentOnboarding
+        else if([response isKindOfClass: [ObjCTransactionIntentOnboarding class]]) {
+            ObjCTransactionIntentOnboarding *trxResponse = response;
+            NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+            [responseDict setValue:@"ONBOARDING" forKey:@"transaction"];
+            [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+            if (trxResponse.response != nil) {
+                [responseDict setValue:trxResponse.response forKey:@"data"];
+            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            });
+        }
+        
+        else if([response isKindOfClass: [ObjCTransactionIntentConnect class]]) {
             ObjCTransactionIntentConnect *res = response;
             NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
             [responseDict setValue:@"CONNECT"  forKey:@"transaction"];
