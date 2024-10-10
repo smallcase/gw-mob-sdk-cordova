@@ -6,9 +6,16 @@ repositories {
             password "smallcaseCordovaPassword"
         }
     }
+     maven {
+      url "https://artifactory.smallcase.com/artifactory/SCGateway-internal"
+      credentials {
+          username "react_native_user"
+          password "reactNativeUser123"
+      }
+  }
     mavenCentral()
 }
 
 dependencies {
-implementation 'com.smallcase.gateway:sdk:3.8.6';
+implementation 'com.smallcase.gateway:sdk:4.2.0';
 }
