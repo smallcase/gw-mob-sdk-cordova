@@ -3,7 +3,7 @@
 // DO NOT modify host app's build.gradle directly
 
 ext {
-    SENTRY_VERSION = project.findProperty("SENTRY_VERSION") ?: "8.22.0"
+    SENTRY_VERSION = project.findProperty("SENTRY_VERSION") ?: "7.8.0"
 }
 
 repositories {
