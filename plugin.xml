@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
  xmlns:android="http://schemas.android.com/apk/res/android"
- id="com.scgateway.phonegap" version="3.0.0">
- <name>Scgateway SDK</name>
- <description>Scgateway wrapper Cordova Plugin</description>
- <keywords>scgateway,gateway</keywords>
+ id="com.scgateway.phonegap" version="3.1.0">
+ <name>SCGateway SDK</name>
+ <description>SCGateway wrapper Cordova Plugin for financial transactions and user management</description>
+ <keywords>scgateway,gateway,financial,transactions,smallcase</keywords>
  <engines>
- <!-- Requires > 3.3.* because of the custom Framework tag for iOS [CB-5238] -->
- <!-- Requires > 3.5.0 because of the custom Framework tag for Android [CB-6698] -->
- <engine name="cordova" version=">=3.7.0" />
+ <engine name="cordova" version=">=10.0.0" />
+ <engine name="cordova-android" version=">=13.0.0" />
+ <engine name="cordova-ios" version=">=8.0.0" />
+ 
+ <!-- Informational tooling requirements -->
+ <engine name="android-sdk" version=">=35" />
+ <engine name="apple-xcode" version=">=15.0" />
+ <engine name="apple-ios" version=">=13.0" />
  </engines>
  <js-module src="SCGatewayPhonegap.js" name="scgateway">
         <clobbers target="scgateway" />
@@ -20,7 +25,7 @@
  </feature>
  </config-file>
  <source-file src="SCGatewayPhonegap.java" target-dir="src/com/scgateway/phonegap/android" />
- <framework src="build.gradle" custom="true" type="gradleReference"/>
+ <framework src="src/android/gradle/smallcase-sdk.gradle" custom="true" type="gradleReference"/>
 <config-file target="AndroidManifest.xml" parent="/manifest">
  <uses-permission android:name="android.permission.INTERNET" />
  </config-file>
@@ -41,5 +46,11 @@
 </podspec>
  <header-file src="SCGatewayPhonegap.h" />
  <source-file src="SCGatewayPhonegap.m" />
+ 
+ <!-- iOS deployment target -->
+ <preference name="IOS_DEPLOYMENT_TARGET" value="13.0" />
+ 
+ <!-- Swift version -->
+ <preference name="SWIFT_VERSION" value="5.0" />
  </platform>
 </plugin>

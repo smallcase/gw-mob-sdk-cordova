@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.0] - 2024-01-XX (Unreleased / Local)
+
+#### 🚀 Local Development Updates
+- **LOCAL**: Updated version to 3.1.0-local for local development
+- **LOCAL**: Ready for integration with smart-investing sample app
+- **LOCAL**: Compatible with AGP 8.7.2 and compileSdk 35
+
+### [3.0.0] - 2024-01-XX
+
+#### 🚀 Major Updates
+- **BREAKING**: Updated SmallcaseGatewaySdk from v4.2.0 to v4.4.0
+- **BREAKING**: Updated minimum Cordova Android to 13.0.0
+- **BREAKING**: Updated minimum Cordova iOS to 8.0.0
+- **BREAKING**: Migrated to new SCGateway Artifactory repository
+
+#### ✅ Compatibility Improvements
+- Added support for AGP 8.7.2 and compileSdk 35
+- Added support for Java 21 (source/target) with JDK 17 runtime
+- Migrated to AndroidX dependencies
+- Added iOS 13.0+ deployment target support
+- Added Swift 5.0 compatibility
+
+#### 🔧 Build System Updates
+- Replaced hardcoded credentials with environment variable support
+- Updated repository URL to `https://artifactory.smallcase.com/artifactory/SCGateway`
+- Created minimal Gradle snippet (`src/android/gradle/smallcase-sdk.gradle`)
+- Removed hardcoded AGP/Gradle version constraints
+- Enhanced repository configuration for private Maven repos
+
+#### 📱 Capacitor Support
+- Added comprehensive Capacitor integration guide
+- Provided manual setup steps for Android and iOS
+- Created detailed mapping table for Capacitor configuration
+- Added troubleshooting section for Capacitor-specific issues
+
+#### 📚 Documentation
+- Completely rewritten README with modern setup instructions
+- Added supported platforms matrix
+- Enhanced API documentation with examples
+- Added troubleshooting guide for common issues
+- Added repository access and authentication documentation
+
+#### 🔄 Migration Guide
+- **Cordova Users**: No breaking changes, just update Cordova versions
+- **Capacitor Users**: Follow manual integration steps in README
+- **Android**: Ensure AndroidX migration is complete
+- **iOS**: Update deployment target to 13.0+ and Swift to 5.0
+- **Credentials**: Update to use environment variables instead of hardcoded values
+
+#### ⚠️ Breaking Changes
+- Minimum Cordova Android: 13.0.0 (was 3.7.0)
+- Minimum Cordova iOS: 8.0.0 (was 3.7.0)
+- iOS Deployment Target: 13.0+ (was not specified)
+- Repository URL: Updated to new SCGateway endpoint
+- Credentials: Now requires environment variables (no hardcoded values)
+
 ### [2.9.1](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.9.0...v2.9.1) (2023-02-16)
 
 ## [2.9.0](https://github.com/smallcase/gw-mob-sdk-cordova/compare/v2.8.1...v2.9.0) (2023-02-16)

@@ -1,0 +1,48 @@
+// SCGateway Cordova Plugin Dependencies
+// This file is automatically included by Cordova/Capacitor
+// DO NOT modify host app's build.gradle directly
+
+ext {
+    SENTRY_VERSION = project.findProperty("SENTRY_VERSION") ?: "8.22.0"
+}
+
+repositories {
+    maven {
+        url "https://artifactory.smallcase.com/artifactory/SCGateway"
+        credentials {
+            username = project.hasProperty('SCGATEWAY_USERNAME') ? project.property('SCGATEWAY_USERNAME') : ''
+            password = project.hasProperty('SCGATEWAY_PASSWORD') ? project.property('SCGATEWAY_PASSWORD') : ''
+        }
+    }
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    // Smallcase Gateway SDK
+    implementation "com.smallcase.gateway:sdk:4.4.0"
+
+    // AndroidX
+    implementation "androidx.annotation:annotation:1.7.0"
+    implementation "androidx.core:core:1.12.0"
+
+    // Sentry (explicit + consistent)
+    implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
+    implementation "io.sentry:sentry-android-ndk:${SENTRY_VERSION}"
+}
+
+// Ensure all io.sentry artifacts resolve to the same version
+configurations.all {
+    resolutionStrategy.eachDependency { d ->
+        if (d.requested.group == "io.sentry") {
+            d.useVersion SENTRY_VERSION
+        }
+    }
+}
+
+// Kotlin compatibility (only if Kotlin is present)
+if (project.hasProperty("kotlin_version")) {
+    android {
+        kotlinOptions { jvmTarget = "1.8" }
+    }
+}
