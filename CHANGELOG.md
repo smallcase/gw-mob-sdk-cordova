@@ -4,16 +4,21 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [4.0.0] - 2024-12-19
 
-#### 🚀 MAJOR RELEASE: Android 16KB Page Size Support
+#### 🚀 MAJOR RELEASE: Android 16KB Page Size Support + iOS Requirements Update
 - **BREAKING**: Updated Sentry Android SDK to v8.0.0 for 16KB page size compatibility
 - **BREAKING**: Updated NDK requirement to 28.2.13676358 for automatic 16KB alignment
 - **BREAKING**: Updated SmallcaseGatewaySdk from v4.2.0 to v4.4.0
 - **BREAKING**: Updated minimum Cordova Android to 14.0.1+ and iOS to 7.1.1+
+- **BREAKING**: Updated iOS requirements to latest SCGateway SDK standards
+  - iOS Deployment Target: 14.0+ (was 13.0)
+  - Swift Version: 6.0+ (was 5.0)
+  - Xcode: 16.4+ (was 15.0)
 - **FEATURE**: Added official support for Android 15+ 16KB page size devices
 - **IMPROVEMENT**: Enhanced Gradle configuration with Sentry version management
 - **IMPROVEMENT**: Updated Android build tools to 36.0.0
 - **IMPROVEMENT**: Added 16KB page size alignment verification
 - **IMPROVEMENT**: Migrated to new SCGateway Artifactory repository
+- **IMPROVEMENT**: Updated iOS framework requirements for latest SCGateway SDK compatibility
 
 #### 🔧 Technical Changes
 - Updated `smallcase-sdk.gradle` with Sentry 8.0.0 dependency
