@@ -6,18 +6,18 @@
  <description>SCGateway wrapper Cordova Plugin for financial transactions and user management</description>
  <keywords>scgateway,gateway,financial,transactions,smallcase</keywords>
  
- <!-- iOS variables -->
- <preference name="IOS_DEPLOYMENT_TARGET" value="14.0" />
- <preference name="SWIFT_VERSION" value="6.0" />
+<!-- iOS variables -->
+<preference name="IOS_DEPLOYMENT_TARGET" value="13.0" />
+<preference name="SWIFT_VERSION" value="6.0" />
  <engines>
  <engine name="cordova" version=">=10.0.0" />
  <engine name="cordova-android" version=">=13.0.0" />
  <engine name="cordova-ios" version=">=7.1.0" />
  
- <!-- Informational tooling requirements -->
- <engine name="android-sdk" version=">=35" />
- <engine name="apple-xcode" version=">=16.4" />
- <engine name="apple-ios" version=">=14.0" />
+<!-- Informational tooling requirements -->
+<engine name="android-sdk" version=">=35" />
+<engine name="apple-xcode" version=">=16.4" />
+<engine name="apple-ios" version=">=13.0" />
  </engines>
  <js-module src="SCGatewayPhonegap.js" name="scgateway">
         <clobbers target="scgateway" />

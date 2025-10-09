@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **BREAKING**: Updated SmallcaseGatewaySdk from v4.2.0 to v4.4.0
 - **BREAKING**: Updated minimum Cordova Android to 14.0.1+ and iOS to 7.1.1+
 - **BREAKING**: Updated iOS requirements to latest SCGateway SDK standards
-  - iOS Deployment Target: 14.0+ (was 13.0)
+  - iOS Deployment Target: 13.0+ (maintained compatibility)
   - Swift Version: 6.0+ (was 5.0)
   - Xcode: 16.4+ (was 15.0)
 - **FEATURE**: Added official support for Android 15+ 16KB page size devices
