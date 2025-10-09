@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **IMPROVEMENT**: Updated Android build tools to 36.0.0
 - **IMPROVEMENT**: Added 16KB page size alignment verification
 - **IMPROVEMENT**: Migrated to new SCGateway Artifactory repository
-- **IMPROVEMENT**: Updated iOS framework requirements for latest SCGateway SDK compatibility
+- **IMPROVEMENT**: Updated iOS framework requirements for SCGateway SDK v6.0.1 compatibility
 
 #### 🔧 Technical Changes
 - Updated `smallcase-sdk.gradle` with Sentry 8.0.0 dependency

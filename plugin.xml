@@ -40,8 +40,15 @@
  <param name="ios-package" value="SCGatewayPhonegap"/>
  </feature>
 </config-file>
-<framework src="SCGateway.framework" custom="true" />
-<!-- Note: SCGateway.framework should be updated to latest version (5.0.0+) -->
+<!-- 
+  iOS Integration via CocoaPods:
+  Add this to your app's Podfile:
+  
+  source 'https://github.com/smallcase/cocoapodspecs.git'
+  pod 'SCGateway', '6.0.1'
+  
+  Then run: pod install
+-->
  <header-file src="SCGatewayPhonegap.h" />
  <source-file src="SCGatewayPhonegap.m" />
  </platform>
