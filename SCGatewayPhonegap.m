@@ -236,11 +236,25 @@
             });
         } else {
             
-            if ([smallplugResponse isKindOfClass: [NSString class]]) {
-                NSLog(@"%@", smallplugResponse);
+            if ([smallplugResponse isKindOfClass:[SmallPlugResult class]]) {
+                SmallPlugResult *result = (SmallPlugResult *)smallplugResponse;
                 
-                [responseDict setValue:[NSNumber numberWithBool: true] forKey:@"success"];
-                [responseDict setValue:smallplugResponse forKey:@"smallcaseAuthToken"];
+                [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+                
+                if (result.smallcaseAuthToken) {
+                    [responseDict setValue:result.smallcaseAuthToken forKey:@"smallcaseAuthToken"];
+                }
+                
+                if (result.userInfo) {
+                    NSMutableDictionary *userInfoDict = [[NSMutableDictionary alloc] init];
+                    if (result.userInfo.number) {
+                        [userInfoDict setValue:result.userInfo.number forKey:@"number"];
+                    }
+                    if (result.userInfo.countryCode) {
+                        [userInfoDict setValue:result.userInfo.countryCode forKey:@"countryCode"];
+                    }
+                    [responseDict setValue:userInfoDict forKey:@"userInfo"];
+                }
                 
                 double delayInSeconds = 0.5;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -289,11 +303,25 @@
             });
         } else {
             
-            if ([smallplugResponse isKindOfClass: [NSString class]]) {
-                NSLog(@"%@", smallplugResponse);
+            if ([smallplugResponse isKindOfClass:[SmallPlugResult class]]) {
+                SmallPlugResult *result = (SmallPlugResult *)smallplugResponse;
                 
-                [responseDict setValue:[NSNumber numberWithBool: true] forKey:@"success"];
-                [responseDict setValue:smallplugResponse forKey:@"smallcaseAuthToken"];
+                [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+                
+                if (result.smallcaseAuthToken) {
+                    [responseDict setValue:result.smallcaseAuthToken forKey:@"smallcaseAuthToken"];
+                }
+                
+                if (result.userInfo) {
+                    NSMutableDictionary *userInfoDict = [[NSMutableDictionary alloc] init];
+                    if (result.userInfo.number) {
+                        [userInfoDict setValue:result.userInfo.number forKey:@"number"];
+                    }
+                    if (result.userInfo.countryCode) {
+                        [userInfoDict setValue:result.userInfo.countryCode forKey:@"countryCode"];
+                    }
+                    [responseDict setValue:userInfoDict forKey:@"userInfo"];
+                }
                 
                 double delayInSeconds = 0.5;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));

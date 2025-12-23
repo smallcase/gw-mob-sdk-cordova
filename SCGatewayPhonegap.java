@@ -225,6 +225,18 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         JSONObject jo = new JSONObject();
                         jo.put("success", smallPlugResult.getSuccess());
                         jo.put("smallcaseAuthToken", smallPlugResult.getSmallcaseAuthToken());
+                        
+                        if (smallPlugResult.getUserInfo() != null) {
+                            JSONObject userInfoObj = new JSONObject();
+                            if (smallPlugResult.getUserInfo().getNumber() != null) {
+                                userInfoObj.put("number", smallPlugResult.getUserInfo().getNumber());
+                            }
+                            if (smallPlugResult.getUserInfo().getCountryCode() != null) {
+                                userInfoObj.put("countryCode", smallPlugResult.getUserInfo().getCountryCode());
+                            }
+                            jo.put("userInfo", userInfoObj);
+                        }
+                        
                         callbackContext.success(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -233,7 +245,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
 
                 @Override
-                public void onFailure(int i, @NotNull String s) {
+                public void onFailure(int i, @NotNull String s, @Nullable String smallcaseAuthToken, @Nullable UserInfo userInfo) {
 
                     Log.d("SCGatewayPhoneGap", "smallplug onFailure: " + i + s);
 
@@ -241,6 +253,18 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
+                        
+                        if (userInfo != null) {
+                            JSONObject userInfoObj = new JSONObject();
+                            if (userInfo.getNumber() != null) {
+                                userInfoObj.put("number", userInfo.getNumber());
+                            }
+                            if (userInfo.getCountryCode() != null) {
+                                userInfoObj.put("countryCode", userInfo.getCountryCode());
+                            }
+                            jo.put("userInfo", userInfoObj);
+                        }
+                        
                         callbackContext.error(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -269,6 +293,18 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         JSONObject jo = new JSONObject();
                         jo.put("success", smallPlugResult.getSuccess());
                         jo.put("smallcaseAuthToken", smallPlugResult.getSmallcaseAuthToken());
+                        
+                        if (smallPlugResult.getUserInfo() != null) {
+                            JSONObject userInfoObj = new JSONObject();
+                            if (smallPlugResult.getUserInfo().getNumber() != null) {
+                                userInfoObj.put("number", smallPlugResult.getUserInfo().getNumber());
+                            }
+                            if (smallPlugResult.getUserInfo().getCountryCode() != null) {
+                                userInfoObj.put("countryCode", smallPlugResult.getUserInfo().getCountryCode());
+                            }
+                            jo.put("userInfo", userInfoObj);
+                        }
+                        
                         callbackContext.success(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -277,7 +313,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
 
                 @Override
-                public void onFailure(int i, @NotNull String s) {
+                public void onFailure(int i, @NotNull String s, @Nullable String smallcaseAuthToken, @Nullable UserInfo userInfo) {
 
                     Log.d("SCGatewayPhoneGap", "smallplug onFailure: " + i + s);
 
@@ -285,6 +321,18 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
+                        
+                        if (userInfo != null) {
+                            JSONObject userInfoObj = new JSONObject();
+                            if (userInfo.getNumber() != null) {
+                                userInfoObj.put("number", userInfo.getNumber());
+                            }
+                            if (userInfo.getCountryCode() != null) {
+                                userInfoObj.put("countryCode", userInfo.getCountryCode());
+                            }
+                            jo.put("userInfo", userInfoObj);
+                        }
+                        
                         callbackContext.error(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
