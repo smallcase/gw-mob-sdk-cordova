@@ -245,6 +245,7 @@
                     [responseDict setValue:result.smallcaseAuthToken forKey:@"smallcaseAuthToken"];
                 }
                 
+                NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] init];
                 if (result.userInfo) {
                     NSMutableDictionary *userInfoDict = [[NSMutableDictionary alloc] init];
                     if (result.userInfo.number) {
@@ -253,7 +254,11 @@
                     if (result.userInfo.countryCode) {
                         [userInfoDict setValue:result.userInfo.countryCode forKey:@"countryCode"];
                     }
-                    [responseDict setValue:userInfoDict forKey:@"userInfo"];
+                    [dataDict setValue:userInfoDict forKey:@"userInfo"];
+                }
+                
+                if ([dataDict count] > 0) {
+                    [responseDict setValue:dataDict forKey:@"data"];
                 }
                 
                 double delayInSeconds = 0.5;
@@ -312,6 +317,7 @@
                     [responseDict setValue:result.smallcaseAuthToken forKey:@"smallcaseAuthToken"];
                 }
                 
+                NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] init];
                 if (result.userInfo) {
                     NSMutableDictionary *userInfoDict = [[NSMutableDictionary alloc] init];
                     if (result.userInfo.number) {
@@ -320,7 +326,11 @@
                     if (result.userInfo.countryCode) {
                         [userInfoDict setValue:result.userInfo.countryCode forKey:@"countryCode"];
                     }
-                    [responseDict setValue:userInfoDict forKey:@"userInfo"];
+                    [dataDict setValue:userInfoDict forKey:@"userInfo"];
+                }
+                
+                if ([dataDict count] > 0) {
+                    [responseDict setValue:dataDict forKey:@"data"];
                 }
                 
                 double delayInSeconds = 0.5;

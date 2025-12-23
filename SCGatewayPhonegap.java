@@ -212,7 +212,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
             });
             return true;
-        case "launchSmallplug":
+            case "launchSmallplug":
 
             SmallcaseGatewaySdk.INSTANCE.launchSmallPlug(this.cordova.getActivity(), new SmallplugData(args.getString(0), args.getString(1)), new SmallPlugResponseListener() {
 
@@ -226,6 +226,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         jo.put("success", smallPlugResult.getSuccess());
                         jo.put("smallcaseAuthToken", smallPlugResult.getSmallcaseAuthToken());
                         
+                        JSONObject dataObj = new JSONObject();
                         if (smallPlugResult.getUserInfo() != null) {
                             JSONObject userInfoObj = new JSONObject();
                             if (smallPlugResult.getUserInfo().getNumber() != null) {
@@ -234,7 +235,11 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                             if (smallPlugResult.getUserInfo().getCountryCode() != null) {
                                 userInfoObj.put("countryCode", smallPlugResult.getUserInfo().getCountryCode());
                             }
-                            jo.put("userInfo", userInfoObj);
+                            dataObj.put("userInfo", userInfoObj);
+                        }
+                        
+                        if (dataObj.length() > 0) {
+                            jo.put("data", dataObj);
                         }
                         
                         callbackContext.success(jo);
@@ -254,6 +259,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
                         
+                        JSONObject dataObj = new JSONObject();
                         if (userInfo != null) {
                             JSONObject userInfoObj = new JSONObject();
                             if (userInfo.getNumber() != null) {
@@ -262,7 +268,11 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                             if (userInfo.getCountryCode() != null) {
                                 userInfoObj.put("countryCode", userInfo.getCountryCode());
                             }
-                            jo.put("userInfo", userInfoObj);
+                            dataObj.put("userInfo", userInfoObj);
+                        }
+                        
+                        if (dataObj.length() > 0) {
+                            jo.put("data", dataObj);
                         }
                         
                         callbackContext.error(jo);
@@ -294,6 +304,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         jo.put("success", smallPlugResult.getSuccess());
                         jo.put("smallcaseAuthToken", smallPlugResult.getSmallcaseAuthToken());
                         
+                        JSONObject dataObj = new JSONObject();
                         if (smallPlugResult.getUserInfo() != null) {
                             JSONObject userInfoObj = new JSONObject();
                             if (smallPlugResult.getUserInfo().getNumber() != null) {
@@ -302,7 +313,11 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                             if (smallPlugResult.getUserInfo().getCountryCode() != null) {
                                 userInfoObj.put("countryCode", smallPlugResult.getUserInfo().getCountryCode());
                             }
-                            jo.put("userInfo", userInfoObj);
+                            dataObj.put("userInfo", userInfoObj);
+                        }
+                        
+                        if (dataObj.length() > 0) {
+                            jo.put("data", dataObj);
                         }
                         
                         callbackContext.success(jo);
@@ -322,6 +337,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
                         
+                        JSONObject dataObj = new JSONObject();
                         if (userInfo != null) {
                             JSONObject userInfoObj = new JSONObject();
                             if (userInfo.getNumber() != null) {
@@ -330,7 +346,11 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                             if (userInfo.getCountryCode() != null) {
                                 userInfoObj.put("countryCode", userInfo.getCountryCode());
                             }
-                            jo.put("userInfo", userInfoObj);
+                            dataObj.put("userInfo", userInfoObj);
+                        }
+                        
+                        if (dataObj.length() > 0) {
+                            jo.put("data", dataObj);
                         }
                         
                         callbackContext.error(jo);
