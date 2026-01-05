@@ -14,8 +14,7 @@ import java.util.*;
 import java.util.ArrayList;
 import android.content.Context;
 import android.util.Log;
-import android.
-widget.Toast;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,7 +26,6 @@ import com.smallcase.gateway.data.requests.InitRequest;
 import com.smallcase.gateway.data.models.InitialisationResponse;
 import com.smallcase.gateway.data.listeners.DataListener;
 import com.google.gson.Gson;
-import com.smallcase.gateway.data.models.UserInfo;
 import com.smallcase.gateway.data.models.SmallcaseGatewayDataResponse;
 import com.smallcase.gateway.data.listeners.TransactionResponseListener;
 import com.smallcase.gateway.data.listeners.MFHoldingsResponseListener;
@@ -251,7 +249,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
 
                 @Override
-                public void onFailure(int i, @NotNull String s, @Nullable String smallcaseAuthToken, @Nullable UserInfo userInfo) {
+                public void onFailure(int i, @NotNull String s) {
 
                     Log.d("SCGatewayPhoneGap", "smallplug onFailure: " + i + s);
 
@@ -259,22 +257,6 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
-                        
-                        JSONObject dataObj = new JSONObject();
-                        if (userInfo != null) {
-                            JSONObject userInfoObj = new JSONObject();
-                            if (userInfo.getNumber() != null) {
-                                userInfoObj.put("number", userInfo.getNumber());
-                            }
-                            if (userInfo.getCountryCode() != null) {
-                                userInfoObj.put("countryCode", userInfo.getCountryCode());
-                            }
-                            dataObj.put("userInfo", userInfoObj);
-                        }
-                        
-                        if (dataObj.length() > 0) {
-                            jo.put("data", dataObj);
-                        }
                         
                         callbackContext.error(jo);
                     } catch (JSONException e) {
@@ -329,7 +311,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
 
                 @Override
-                public void onFailure(int i, @NotNull String s, @Nullable String smallcaseAuthToken, @Nullable UserInfo userInfo) {
+                public void onFailure(int i, @NotNull String s) {
 
                     Log.d("SCGatewayPhoneGap", "smallplug onFailure: " + i + s);
 
@@ -337,22 +319,6 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
-                        
-                        JSONObject dataObj = new JSONObject();
-                        if (userInfo != null) {
-                            JSONObject userInfoObj = new JSONObject();
-                            if (userInfo.getNumber() != null) {
-                                userInfoObj.put("number", userInfo.getNumber());
-                            }
-                            if (userInfo.getCountryCode() != null) {
-                                userInfoObj.put("countryCode", userInfo.getCountryCode());
-                            }
-                            dataObj.put("userInfo", userInfoObj);
-                        }
-                        
-                        if (dataObj.length() > 0) {
-                            jo.put("data", dataObj);
-                        }
                         
                         callbackContext.error(jo);
                     } catch (JSONException e) {
