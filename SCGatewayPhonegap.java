@@ -27,6 +27,7 @@ import com.smallcase.gateway.data.requests.InitRequest;
 import com.smallcase.gateway.data.models.InitialisationResponse;
 import com.smallcase.gateway.data.listeners.DataListener;
 import com.google.gson.Gson;
+import com.smallcase.gateway.data.models.UserInfo;
 import com.smallcase.gateway.data.models.SmallcaseGatewayDataResponse;
 import com.smallcase.gateway.data.listeners.TransactionResponseListener;
 import com.smallcase.gateway.data.listeners.MFHoldingsResponseListener;
