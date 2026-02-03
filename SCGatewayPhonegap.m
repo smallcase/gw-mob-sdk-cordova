@@ -152,6 +152,22 @@
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             });
         }
+        //MARK: intent - mf holdings import
+        else if ([response isKindOfClass: [ObjCTransactionIntentMfHoldingsImport class]]) {
+            ObjCTransactionIntentMfHoldingsImport *trxResponse = response;
+            NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
+            [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
+            [responseDict setValue:@"MF_HOLDINGS_IMPORT" forKey:@"transaction"];
+            if (trxResponse.data != nil && trxResponse.data.length > 0) {
+                [responseDict setObject:trxResponse.data forKey:@"data"];
+            } else {
+                [responseDict setObject:@"" forKey:@"data"];
+            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseDict];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            });
+        }
 
     }];
 }
