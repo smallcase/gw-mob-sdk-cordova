@@ -351,7 +351,7 @@
     __block CDVPluginResult *pluginResult = nil;
          NSString *authToken = [command.arguments objectAtIndex:0];
          NSLog(@"SdkToken %@", authToken);
-     [SCGateway.shared initializeGatewayWithSdkToken:authToken completion:^( BOOL success, NSError * error) {
+     [SCGateway.shared initializeGateway:authToken externalMeta:nil completion:^(NSString *response, NSError *error) {
                      if(success){
                          NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
                         [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
