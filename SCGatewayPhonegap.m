@@ -351,7 +351,7 @@
     __block CDVPluginResult *pluginResult = nil;
          NSString *authToken = [command.arguments objectAtIndex:0];
          NSLog(@"SdkToken %@", authToken);
-     [SCGateway.shared initializeGateway:authToken externalMeta:nil completion:^(NSString *response, NSError *error) {
+     [SCGateway.shared initializeGatewayWithSdkToken:authToken externalMeta:nil completion:^(BOOL success, NSError *error) {
                      if(success){
                          NSMutableDictionary *responseDict = [[NSMutableDictionary alloc] init];
                         [responseDict setValue:[NSNumber numberWithBool:true] forKey:@"success"];
@@ -370,8 +370,6 @@
                         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                      }
                  }];
-
-                 
 }
 
 - (void)setConfigEnvironment:(CDVInvokedUrlCommand*)command{
