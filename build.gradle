@@ -17,5 +17,5 @@ repositories {
 }
 
 dependencies {
-implementation 'com.smallcase.gateway:sdk:6.0.0';
+implementation 'com.smallcase.gateway:sdk:6.0.3';
 }

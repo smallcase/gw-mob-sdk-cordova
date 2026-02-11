@@ -36,7 +36,7 @@
         <source url="https://github.com/smallcase/cocoapodspecs.git" />
       </config>
       <pods use-frameworks="true" >
-        <pod name="SCGateway" spec="7.0.0" />
+        <pod name="SCGateway" spec="7.1.1" />
       </pods>
 </podspec>
  <header-file src="SCGatewayPhonegap.h" />
