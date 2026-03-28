@@ -36,7 +36,7 @@
         <source url="https://github.com/smallcase/cocoapodspecs.git" />
       </config>
       <pods use-frameworks="true" >
-        <pod name="SCGateway" spec="7.1.4" />
+        <pod name="SCGateway-dhruv-propagate-dm-events-eaf8710'" spec="7.1.0-18-debug" />
       </pods>
 </podspec>
  <header-file src="SCGatewayPhonegap.h" />
