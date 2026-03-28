@@ -140,6 +140,26 @@ exports.launchSmallplugWithBranding = function(successCallback, failureCallback,
     );
 };
 
+exports.subscribeToSmallplugEvents = function(eventCallback, failureCallback) {
+    cordova.exec(
+        eventCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "subscribeToSmallplugEvents",
+        []
+    );
+};
+
+exports.unsubscribeFromSmallplugEvents = function(successCallback, failureCallback) {
+    cordova.exec(
+        successCallback,
+        failureCallback,
+        "SCGatewayPhonegap",
+        "unsubscribeFromSmallplugEvents",
+        []
+    );
+};
+
 exports.isUserConnected = function(successCallback, failureCallback) {
     cordova.exec(
         successCallback,

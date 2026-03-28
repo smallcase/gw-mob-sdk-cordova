@@ -4,6 +4,7 @@ import com.smallcase.gateway.data.listeners.LeadGenResponseListener;
 import com.smallcase.gateway.data.models.SmallplugData;
 import com.smallcase.gateway.portal.SmallcaseGatewaySdk;
 import org.apache.cordova.*;
+import org.apache.cordova.PluginResult;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,13 +31,17 @@ import com.smallcase.gateway.data.models.SmallcaseGatewayDataResponse;
 import com.smallcase.gateway.data.listeners.TransactionResponseListener;
 import com.smallcase.gateway.data.listeners.MFHoldingsResponseListener;
 import com.smallcase.gateway.data.models.TransactionResult;
+import com.smallcase.gateway.data.listeners.Notification;
+import com.smallcase.gateway.data.listeners.NotificationCenter;
 import com.smallcase.gateway.data.listeners.SmallPlugResponseListener;
 import com.smallcase.gateway.data.models.SmallPlugResult;
+import com.smallcase.gateway.portal.ScgNotification;
 import com.smallcase.gateway.portal.SmallplugPartnerProps;
 
 public class SCGatewayPhonegap extends CordovaPlugin {
 
 CordovaInterface mCordova;
+private kotlin.jvm.functions.Function1<Notification, kotlin.Unit> smallplugEventObserver = null;
 
 @Override
 public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -545,9 +550,48 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             });
 
             return true;
+        case "subscribeToSmallplugEvents":
+            if (smallplugEventObserver != null) {
+                NotificationCenter.removeObserver(smallplugEventObserver);
+            }
+            smallplugEventObserver = notification -> {
+                String jsonStr = (String) notification.getUserInfo().get(ScgNotification.STRINGIFIED_PAYLOAD_KEY);
+                if (jsonStr == null) return null;
+                try {
+                    JSONObject parsed = new JSONObject(jsonStr);
+                    if (!"smallplug_analytics_event".equals(parsed.optString("type"))) return null;
+                    JSONObject eventData = parsed.optJSONObject("data");
+                    if (eventData == null) return null;
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, eventData);
+                    pluginResult.setKeepCallback(true);
+                    callbackContext.sendPluginResult(pluginResult);
+                } catch (Exception e) {
+                    Log.e("SCGatewayPhoneGap", "Failed to parse smallplug event", e);
+                }
+                return null;
+            };
+            NotificationCenter.addObserver(smallplugEventObserver);
+            return true;
+
+        case "unsubscribeFromSmallplugEvents":
+            if (smallplugEventObserver != null) {
+                NotificationCenter.removeObserver(smallplugEventObserver);
+                smallplugEventObserver = null;
+            }
+            callbackContext.success();
+            return true;
     }
 
 return false;
+}
+
+@Override
+public void onDestroy() {
+    if (smallplugEventObserver != null) {
+        NotificationCenter.removeObserver(smallplugEventObserver);
+        smallplugEventObserver = null;
+    }
+    super.onDestroy();
 }
 
 private JSONObject convertToJson(TransactionResult transactionResult) {
