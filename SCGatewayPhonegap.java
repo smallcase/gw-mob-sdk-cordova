@@ -222,9 +222,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
 
                 @Override
                 public void onSuccess(@NotNull SmallPlugResult smallPlugResult) {
-
                     Log.d("SCGatewayPhoneGap", "smallplug onSuccess: " + smallPlugResult.toString());
-
                     try {
                         JSONObject jo = new JSONObject();
                         jo.put("success", smallPlugResult.getSuccess());
@@ -241,11 +239,9 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                             }
                             dataObj.put("userInfo", userInfoObj);
                         }
-                        
                         if (dataObj.length() > 0) {
                             jo.put("data", dataObj);
                         }
-                        
                         callbackContext.success(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -255,25 +251,23 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
 
                 @Override
                 public void onFailure(int i, @NotNull String s) {
-
                     Log.d("SCGatewayPhoneGap", "smallplug onFailure: " + i + s);
-
                     try {
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
-                        
                         callbackContext.error(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         callbackContext.error("JSONException");
                     }
-
                 }
 
-            }, null);
-
-            return true;
+            },      // <-- closing brace + comma HERE
+            null,   // smallplugPartnerProps
+            null    // onSmallplugAnalyticsEvent
+        );
+        return true;
 
         case "launchSmallplugWithBranding":
 
@@ -284,9 +278,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
 
                 @Override
                 public void onSuccess(@NotNull SmallPlugResult smallPlugResult) {
-
                     Log.d("SCGatewayPhoneGap", "smallplug onSuccess: " + smallPlugResult.toString());
-
                     try {
                         JSONObject jo = new JSONObject();
                         jo.put("success", smallPlugResult.getSuccess());
@@ -303,11 +295,9 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                             }
                             dataObj.put("userInfo", userInfoObj);
                         }
-                        
                         if (dataObj.length() > 0) {
                             jo.put("data", dataObj);
                         }
-                        
                         callbackContext.success(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -317,30 +307,28 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
 
                 @Override
                 public void onFailure(int i, @NotNull String s) {
-
                     Log.d("SCGatewayPhoneGap", "smallplug onFailure: " + i + s);
-
                     try {
                         JSONObject jo = new JSONObject();
                         jo.put("errorCode", i);
                         jo.put("errorMessage", s);
-                        
                         callbackContext.error(jo);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         callbackContext.error("JSONException");
                     }
-
                 }
 
-            }, new SmallplugPartnerProps(
-                        args.getString(2) == null || args.getString(2).length() < 6 ? "#2F363F" : args.getString(2),
-                        args.getDouble(3),
-                        args.getString(4) == null || args.getString(4).length() < 6 ? "#FFFFFF" : args.getString(4),
-                        args.getDouble(5)
-                    ));
-
-            return true;    
+            },
+            new SmallplugPartnerProps(
+                args.getString(2) == null || args.getString(2).length() < 6 ? "#2F363F" : args.getString(2),
+                args.getDouble(3),
+                args.getString(4) == null || args.getString(4).length() < 6 ? "#FFFFFF" : args.getString(4),
+                args.getDouble(5)
+            ),
+            null    // onSmallplugAnalyticsEvent
+        );
+        return true;
         case "triggerLeadGenWithStatus":
             HashMap<String, String> map = new HashMap<String, String>();
             if (args.get(0) instanceof JSONObject) {
@@ -552,7 +540,7 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
             return true;
         case "subscribeToSmallplugEvents":
             if (smallplugEventObserver != null) {
-                NotificationCenter.removeObserver(smallplugEventObserver);
+                NotificationCenter.INSTANCE.removeObserver(smallplugEventObserver);
             }
             smallplugEventObserver = notification -> {
                 String jsonStr = (String) notification.getUserInfo().get(ScgNotification.STRINGIFIED_PAYLOAD_KEY);
@@ -570,12 +558,12 @@ public boolean execute(String action, JSONArray args, CallbackContext callbackCo
                 }
                 return null;
             };
-            NotificationCenter.addObserver(smallplugEventObserver);
+            NotificationCenter.INSTANCE.addObserver(smallplugEventObserver);
             return true;
 
         case "unsubscribeFromSmallplugEvents":
             if (smallplugEventObserver != null) {
-                NotificationCenter.removeObserver(smallplugEventObserver);
+                NotificationCenter.INSTANCE.removeObserver(smallplugEventObserver);
                 smallplugEventObserver = null;
             }
             callbackContext.success();
@@ -588,7 +576,7 @@ return false;
 @Override
 public void onDestroy() {
     if (smallplugEventObserver != null) {
-        NotificationCenter.removeObserver(smallplugEventObserver);
+        NotificationCenter.INSTANCE.removeObserver(smallplugEventObserver);
         smallplugEventObserver = null;
     }
     super.onDestroy();
