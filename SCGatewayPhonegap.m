@@ -6,6 +6,10 @@
 #import <SCGateway/SCGateway-Swift.h>
 
 
+@interface SCGatewayPhonegap ()
+@property (nonatomic, strong) NSString *smallplugEventsCallbackId;
+@end
+
 @implementation SCGatewayPhonegap
 
 - (void)setCordovaSdkVersion:(CDVInvokedUrlCommand*)command{
@@ -514,4 +518,46 @@ GatewayConfig *config = [[GatewayConfig alloc] initWithGatewayName:gatewayName b
         }
     }];
 }
+//MARK: SmallPlug event streaming
+- (void)subscribeToSmallplugEvents:(CDVInvokedUrlCommand *)command {
+    if (self.smallplugEventsCallbackId) {
+        [SCGateway.shared removeAnalyticsObserver:self];
+    }
+    self.smallplugEventsCallbackId = command.callbackId;
+    [SCGateway.shared addAnalyticsObserver:self selector:@selector(handleScgAnalyticsNotification:)];
+}
+
+- (void)unsubscribeFromSmallplugEvents:(CDVInvokedUrlCommand *)command {
+    if (self.smallplugEventsCallbackId) {
+        [SCGateway.shared removeAnalyticsObserver:self];
+        self.smallplugEventsCallbackId = nil;
+    }
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+}
+
+- (void)dealloc {
+    if (self.smallplugEventsCallbackId) {
+        [SCGateway.shared removeAnalyticsObserver:self];
+    }
+}
+
+- (void)handleScgAnalyticsNotification:(NSNotification *)notification {
+    if (!self.smallplugEventsCallbackId) return;
+
+    NSString *jsonString = notification.userInfo[@"payload_str"];
+    if (!jsonString) return;
+
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *parsed = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    if (!parsed || ![parsed[@"type"] isEqualToString:@"smallplug_analytics_event"]) return;
+
+    NSDictionary *eventData = parsed[@"data"];
+    if (!eventData) return;
+
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:eventData];
+    [result setKeepCallbackAsBool:YES];
+    [self.commandDelegate sendPluginResult:result callbackId:self.smallplugEventsCallbackId];
+}
+
 @end
