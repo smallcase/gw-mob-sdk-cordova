@@ -12,5 +12,7 @@
 - (void)setCordovaSdkVersion:(CDVInvokedUrlCommand*)command;
 - (void)showOrders:(CDVInvokedUrlCommand*)command;
 - (void)isUserConnected:(CDVInvokedUrlCommand*)command;
+- (void)subscribeToSmallplugEvents:(CDVInvokedUrlCommand*)command;
+- (void)unsubscribeFromSmallplugEvents:(CDVInvokedUrlCommand*)command;
 @end
 
