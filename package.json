@@ -1,9 +1,9 @@
 {
-  "name": "com.scgateway.phonegap",
+  "name": "cordova-plugin-smallcase-gateway",
   "version": "6.0.5",
   "description": "Scgateway wrapper Cordova Plugin",
   "cordova": {
-    "id": "com.scgateway.phonegap",
+    "id": "cordova-plugin-smallcase-gateway",
     "platforms": [
       "android",
       "ios"
@@ -25,11 +25,16 @@
   "author": "ankit-deshmukh",
   "license": "ISC",
   "main": "SCGatewayPhonegap.js",
+  "files": [
+    "plugin.xml",
+    "SCGatewayPhonegap.js",
+    "SCGatewayPhonegap.java",
+    "SCGatewayPhonegap.h",
+    "SCGatewayPhonegap.m",
+    "build.gradle"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch",
-    "release:major": "standard-version --release-as major"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -38,8 +43,5 @@
   "bugs": {
     "url": "https://github.com/smallcase/gw-mob-sdk-cordova/issues"
   },
-  "homepage": "https://github.com/smallcase/gw-mob-sdk-cordova#readme",
-  "dependencies": {
-    "standard-version": "^9.5.0"
-  }
+  "homepage": "https://github.com/smallcase/gw-mob-sdk-cordova#readme"
 }
