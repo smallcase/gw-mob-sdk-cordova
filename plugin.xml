@@ -33,7 +33,7 @@
 </config-file>
 <podspec>
       <config>
-        <source url="https://github.com/smallcase/cocoapodspecs.git" />
+        <source url="https://cdn.cocoapods.org/" />
       </config>
       <pods use-frameworks="true" >
         <pod name="SCGateway" spec="7.1.7" />
