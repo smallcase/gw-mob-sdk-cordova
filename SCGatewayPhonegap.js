@@ -8,7 +8,7 @@ exports.getSdkVersion = function(successCallback, failureCallback)
         failureCallback,
         "SCGatewayPhonegap",
         "getSdkVersion",
-        [plugin_list.metadata['com.scgateway.phonegap']]
+        [plugin_list.metadata['cordova-plugin-smallcase-gateway']]
     );
 }
 
@@ -19,7 +19,7 @@ exports.setConfigEnvironment = function(successCallback,failureCallback,args)
         {},
         "SCGatewayPhonegap",
         "setCordovaSdkVersion",
-        [plugin_list.metadata['com.scgateway.phonegap']]
+        [plugin_list.metadata['cordova-plugin-smallcase-gateway']]
     );
 
     cordova.exec(

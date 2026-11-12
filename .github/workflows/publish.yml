@@ -1,0 +1,88 @@
+name: 🚀 Release
+
+# On every push to master, release-please keeps the "chore(master): release X.Y.Z" PR up to date.
+# Merging it tags vX.Y.Z, then: checks -> npm X.Y.Z (latest) -> Slack.
+# The only npm publish; keep this file name, npm trusted publishing is bound to it.
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: arc-runner-set-dind
+    outputs:
+      created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      # A PR opened with GITHUB_TOKEN starts no workflows, so the release PR would get no checks.
+      - uses: actions/create-github-app-token@v2
+        id: app
+        with:
+          app-id: ${{ vars.CASE_CI_RELEASE_APP_ID }}
+          private-key: ${{ secrets.CASE_CI_RELEASE_APP_PRI_KEY }}
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ steps.app.outputs.token }}
+          target-branch: master
+
+  npm:
+    needs: release
+    if: needs.release.outputs.created == 'true'
+    environment: production
+    runs-on: ubuntu-latest # npm trusted publishing needs a GitHub-hosted runner
+    permissions:
+      id-token: write # npm trusted publishing (OIDC)
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.tag_name }}
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24 # npm >= 11.5.1 for trusted publishing
+          registry-url: https://registry.npmjs.org
+
+      - name: Tag, package.json and plugin.xml versions match
+        env:
+          TAG: ${{ needs.release.outputs.tag_name }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const tag = process.env.TAG.replace(/^v/, "");
+            const pkg = require("./package.json").version;
+            const xml = fs.readFileSync("plugin.xml", "utf8").match(/<plugin\b[^>]*?\bversion="([^"]+)"/)[1];
+            console.log({ tag, pkg, xml });
+            if (tag !== pkg || tag !== xml) { console.error("Version mismatch"); process.exit(1); }
+          '
+
+      - name: Native pins are production versions
+        run: |
+          if grep -nE "pod name=.*spec=\"[0-9.]+-|implementation '.*:[0-9.]+-" plugin.xml build.gradle; then
+            echo '::error::Release pins above are internal native builds. Pin production native versions first.'
+            exit 1
+          fi
+
+      - name: No credentials in build.gradle
+        run: |
+          if grep -nEi 'credentials|password' build.gradle; then
+            echo '::error::build.gradle must not contain credentials'; exit 1
+          fi
+
+      - run: npm publish
+
+      - name: Post release to #gateway-deployments
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          TAG: ${{ needs.release.outputs.tag_name }}
+        run: |
+          name=$(node -p 'require("./package.json").name')
+          text=":package: *Cordova SDK* \`${name}@${TAG#v}\` released: <https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG|release notes>"
+          curl --silent --show-error --fail-with-body -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg c C08JL9BBGMT --arg t "$text" '{channel: $c, text: $t}')" | jq -e .ok
